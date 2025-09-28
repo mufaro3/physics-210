@@ -50,8 +50,8 @@ def apply_gravitational_field(i, body, objects):
         return
     
     other_objects = [x for x in objects if x is not body]
-    
-    
+
+
 def simulate(objects, time_range, dt, 
              collision_radius=0.1, 
              bottom_barrier=-10, 
