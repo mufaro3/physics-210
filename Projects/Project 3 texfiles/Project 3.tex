@@ -1,0 +1,2822 @@
+\documentclass[11pt]{article}
+
+    \usepackage[breakable]{tcolorbox}
+    \usepackage{parskip} % Stop auto-indenting (to mimic markdown behaviour)
+    
+
+    % Basic figure setup, for now with no caption control since it's done
+    % automatically by Pandoc (which extracts ![](path) syntax from Markdown).
+    \usepackage{graphicx}
+    % Maintain compatibility with old templates. Remove in nbconvert 6.0
+    \let\Oldincludegraphics\includegraphics
+    % Ensure that by default, figures have no caption (until we provide a
+    % proper Figure object with a Caption API and a way to capture that
+    % in the conversion process - todo).
+    \usepackage{caption}
+    \DeclareCaptionFormat{nocaption}{}
+    \captionsetup{format=nocaption,aboveskip=0pt,belowskip=0pt}
+
+    \usepackage{float}
+    \floatplacement{figure}{H} % forces figures to be placed at the correct location
+    \usepackage{xcolor} % Allow colors to be defined
+    \usepackage{enumerate} % Needed for markdown enumerations to work
+    \usepackage{geometry} % Used to adjust the document margins
+    \usepackage{amsmath} % Equations
+    \usepackage{amssymb} % Equations
+    \usepackage{textcomp} % defines textquotesingle
+    % Hack from http://tex.stackexchange.com/a/47451/13684:
+    \AtBeginDocument{%
+        \def\PYZsq{\textquotesingle}% Upright quotes in Pygmentized code
+    }
+    \usepackage{upquote} % Upright quotes for verbatim code
+    \usepackage{eurosym} % defines \euro
+
+    \usepackage{iftex}
+    \ifPDFTeX
+        \usepackage[T1]{fontenc}
+        \IfFileExists{alphabeta.sty}{
+              \usepackage{alphabeta}
+          }{
+              \usepackage[mathletters]{ucs}
+              \usepackage[utf8x]{inputenc}
+          }
+    \else
+        \usepackage{fontspec}
+        \usepackage{unicode-math}
+    \fi
+
+    \usepackage{fancyvrb} % verbatim replacement that allows latex
+    \usepackage[Export]{adjustbox} % Used to constrain images to a maximum size
+    \adjustboxset{max size={0.9\linewidth}{0.9\paperheight}}
+
+    % The hyperref package gives us a pdf with properly built
+    % internal navigation ('pdf bookmarks' for the table of contents,
+    % internal cross-reference links, web links for URLs, etc.)
+    \usepackage{hyperref}
+    % The default LaTeX title has an obnoxious amount of whitespace. By default,
+    % titling removes some of it. It also provides customization options.
+    \usepackage{titling}
+    \usepackage{longtable} % longtable support required by pandoc >1.10
+    \usepackage{booktabs}  % table support for pandoc > 1.12.2
+    \usepackage{array}     % table support for pandoc >= 2.11.3
+    \usepackage{calc}      % table minipage width calculation for pandoc >= 2.11.1
+    \usepackage[inline]{enumitem} % IRkernel/repr support (it uses the enumerate* environment)
+    \usepackage[normalem]{ulem} % ulem is needed to support strikethroughs (\sout)
+                                % normalem makes italics be italics, not underlines
+    \usepackage{mathrsfs}
+    
+
+    
+    % Colors for the hyperref package
+    \definecolor{urlcolor}{rgb}{0,.145,.698}
+    \definecolor{linkcolor}{rgb}{.71,0.21,0.01}
+    \definecolor{citecolor}{rgb}{.12,.54,.11}
+
+    % ANSI colors
+    \definecolor{ansi-black}{HTML}{3E424D}
+    \definecolor{ansi-black-intense}{HTML}{282C36}
+    \definecolor{ansi-red}{HTML}{E75C58}
+    \definecolor{ansi-red-intense}{HTML}{B22B31}
+    \definecolor{ansi-green}{HTML}{00A250}
+    \definecolor{ansi-green-intense}{HTML}{007427}
+    \definecolor{ansi-yellow}{HTML}{DDB62B}
+    \definecolor{ansi-yellow-intense}{HTML}{B27D12}
+    \definecolor{ansi-blue}{HTML}{208FFB}
+    \definecolor{ansi-blue-intense}{HTML}{0065CA}
+    \definecolor{ansi-magenta}{HTML}{D160C4}
+    \definecolor{ansi-magenta-intense}{HTML}{A03196}
+    \definecolor{ansi-cyan}{HTML}{60C6C8}
+    \definecolor{ansi-cyan-intense}{HTML}{258F8F}
+    \definecolor{ansi-white}{HTML}{C5C1B4}
+    \definecolor{ansi-white-intense}{HTML}{A1A6B2}
+    \definecolor{ansi-default-inverse-fg}{HTML}{FFFFFF}
+    \definecolor{ansi-default-inverse-bg}{HTML}{000000}
+
+    % common color for the border for error outputs.
+    \definecolor{outerrorbackground}{HTML}{FFDFDF}
+
+    % commands and environments needed by pandoc snippets
+    % extracted from the output of `pandoc -s`
+    \providecommand{\tightlist}{%
+      \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+    \DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+    % Add ',fontsize=\small' for more characters per line
+    \newenvironment{Shaded}{}{}
+    \newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+    \newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.56,0.13,0.00}{{#1}}}
+    \newcommand{\DecValTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\FloatTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\CharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\StringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\CommentTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textit{{#1}}}}
+    \newcommand{\OtherTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{{#1}}}
+    \newcommand{\AlertTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+    \newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.02,0.16,0.49}{{#1}}}
+    \newcommand{\RegionMarkerTok}[1]{{#1}}
+    \newcommand{\ErrorTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+    \newcommand{\NormalTok}[1]{{#1}}
+
+    % Additional commands for more recent versions of Pandoc
+    \newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.53,0.00,0.00}{{#1}}}
+    \newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.73,0.40,0.53}{{#1}}}
+    \newcommand{\ImportTok}[1]{{#1}}
+    \newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.73,0.13,0.13}{\textit{{#1}}}}
+    \newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\VariableTok}[1]{\textcolor[rgb]{0.10,0.09,0.49}{{#1}}}
+    \newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+    \newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.40,0.40,0.40}{{#1}}}
+    \newcommand{\BuiltInTok}[1]{{#1}}
+    \newcommand{\ExtensionTok}[1]{{#1}}
+    \newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.74,0.48,0.00}{{#1}}}
+    \newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.49,0.56,0.16}{{#1}}}
+    \newcommand{\InformationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\WarningTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+
+
+    % Define a nice break command that doesn't care if a line doesn't already
+    % exist.
+    \def\br{\hspace*{\fill} \\* }
+    % Math Jax compatibility definitions
+    \def\gt{>}
+    \def\lt{<}
+    \let\Oldtex\TeX
+    \let\Oldlatex\LaTeX
+    \renewcommand{\TeX}{\textrm{\Oldtex}}
+    \renewcommand{\LaTeX}{\textrm{\Oldlatex}}
+    % Document parameters
+    % Document title
+    \title{Project 3}
+    
+    
+    
+    
+    
+% Pygments definitions
+\makeatletter
+\def\PY@reset{\let\PY@it=\relax \let\PY@bf=\relax%
+    \let\PY@ul=\relax \let\PY@tc=\relax%
+    \let\PY@bc=\relax \let\PY@ff=\relax}
+\def\PY@tok#1{\csname PY@tok@#1\endcsname}
+\def\PY@toks#1+{\ifx\relax#1\empty\else%
+    \PY@tok{#1}\expandafter\PY@toks\fi}
+\def\PY@do#1{\PY@bc{\PY@tc{\PY@ul{%
+    \PY@it{\PY@bf{\PY@ff{#1}}}}}}}
+\def\PY#1#2{\PY@reset\PY@toks#1+\relax+\PY@do{#2}}
+
+\@namedef{PY@tok@w}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.73,0.73}{##1}}}
+\@namedef{PY@tok@c}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.24,0.48,0.48}{##1}}}
+\@namedef{PY@tok@cp}{\def\PY@tc##1{\textcolor[rgb]{0.61,0.40,0.00}{##1}}}
+\@namedef{PY@tok@k}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kp}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kt}{\def\PY@tc##1{\textcolor[rgb]{0.69,0.00,0.25}{##1}}}
+\@namedef{PY@tok@o}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@ow}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\@namedef{PY@tok@nb}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@nf}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\@namedef{PY@tok@nc}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\@namedef{PY@tok@nn}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\@namedef{PY@tok@ne}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.80,0.25,0.22}{##1}}}
+\@namedef{PY@tok@nv}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@no}{\def\PY@tc##1{\textcolor[rgb]{0.53,0.00,0.00}{##1}}}
+\@namedef{PY@tok@nl}{\def\PY@tc##1{\textcolor[rgb]{0.46,0.46,0.00}{##1}}}
+\@namedef{PY@tok@ni}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.44,0.44,0.44}{##1}}}
+\@namedef{PY@tok@na}{\def\PY@tc##1{\textcolor[rgb]{0.41,0.47,0.13}{##1}}}
+\@namedef{PY@tok@nt}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@nd}{\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\@namedef{PY@tok@s}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@sd}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@si}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.64,0.35,0.47}{##1}}}
+\@namedef{PY@tok@se}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.67,0.36,0.12}{##1}}}
+\@namedef{PY@tok@sr}{\def\PY@tc##1{\textcolor[rgb]{0.64,0.35,0.47}{##1}}}
+\@namedef{PY@tok@ss}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@sx}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@m}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@gh}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\@namedef{PY@tok@gu}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.50,0.00,0.50}{##1}}}
+\@namedef{PY@tok@gd}{\def\PY@tc##1{\textcolor[rgb]{0.63,0.00,0.00}{##1}}}
+\@namedef{PY@tok@gi}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.52,0.00}{##1}}}
+\@namedef{PY@tok@gr}{\def\PY@tc##1{\textcolor[rgb]{0.89,0.00,0.00}{##1}}}
+\@namedef{PY@tok@ge}{\let\PY@it=\textit}
+\@namedef{PY@tok@gs}{\let\PY@bf=\textbf}
+\@namedef{PY@tok@ges}{\let\PY@bf=\textbf\let\PY@it=\textit}
+\@namedef{PY@tok@gp}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\@namedef{PY@tok@go}{\def\PY@tc##1{\textcolor[rgb]{0.44,0.44,0.44}{##1}}}
+\@namedef{PY@tok@gt}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.27,0.87}{##1}}}
+\@namedef{PY@tok@err}{\def\PY@bc##1{{\setlength{\fboxsep}{\string -\fboxrule}\fcolorbox[rgb]{1.00,0.00,0.00}{1,1,1}{\strut ##1}}}}
+\@namedef{PY@tok@kc}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kd}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kn}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kr}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@bp}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@fm}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\@namedef{PY@tok@vc}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@vg}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@vi}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@vm}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@sa}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@sb}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@sc}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@dl}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@s2}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@sh}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@s1}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@mb}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@mf}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@mh}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@mi}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@il}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@mo}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@ch}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.24,0.48,0.48}{##1}}}
+\@namedef{PY@tok@cm}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.24,0.48,0.48}{##1}}}
+\@namedef{PY@tok@cpf}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.24,0.48,0.48}{##1}}}
+\@namedef{PY@tok@c1}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.24,0.48,0.48}{##1}}}
+\@namedef{PY@tok@cs}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.24,0.48,0.48}{##1}}}
+
+\def\PYZbs{\char`\\}
+\def\PYZus{\char`\_}
+\def\PYZob{\char`\{}
+\def\PYZcb{\char`\}}
+\def\PYZca{\char`\^}
+\def\PYZam{\char`\&}
+\def\PYZlt{\char`\<}
+\def\PYZgt{\char`\>}
+\def\PYZsh{\char`\#}
+\def\PYZpc{\char`\%}
+\def\PYZdl{\char`\$}
+\def\PYZhy{\char`\-}
+\def\PYZsq{\char`\'}
+\def\PYZdq{\char`\"}
+\def\PYZti{\char`\~}
+% for compatibility with earlier versions
+\def\PYZat{@}
+\def\PYZlb{[}
+\def\PYZrb{]}
+\makeatother
+
+
+    % For linebreaks inside Verbatim environment from package fancyvrb.
+    \makeatletter
+        \newbox\Wrappedcontinuationbox
+        \newbox\Wrappedvisiblespacebox
+        \newcommand*\Wrappedvisiblespace {\textcolor{red}{\textvisiblespace}}
+        \newcommand*\Wrappedcontinuationsymbol {\textcolor{red}{\llap{\tiny$\m@th\hookrightarrow$}}}
+        \newcommand*\Wrappedcontinuationindent {3ex }
+        \newcommand*\Wrappedafterbreak {\kern\Wrappedcontinuationindent\copy\Wrappedcontinuationbox}
+        % Take advantage of the already applied Pygments mark-up to insert
+        % potential linebreaks for TeX processing.
+        %        {, <, #, %, $, ' and ": go to next line.
+        %        _, }, ^, &, >, - and ~: stay at end of broken line.
+        % Use of \textquotesingle for straight quote.
+        \newcommand*\Wrappedbreaksatspecials {%
+            \def\PYGZus{\discretionary{\char`\_}{\Wrappedafterbreak}{\char`\_}}%
+            \def\PYGZob{\discretionary{}{\Wrappedafterbreak\char`\{}{\char`\{}}%
+            \def\PYGZcb{\discretionary{\char`\}}{\Wrappedafterbreak}{\char`\}}}%
+            \def\PYGZca{\discretionary{\char`\^}{\Wrappedafterbreak}{\char`\^}}%
+            \def\PYGZam{\discretionary{\char`\&}{\Wrappedafterbreak}{\char`\&}}%
+            \def\PYGZlt{\discretionary{}{\Wrappedafterbreak\char`\<}{\char`\<}}%
+            \def\PYGZgt{\discretionary{\char`\>}{\Wrappedafterbreak}{\char`\>}}%
+            \def\PYGZsh{\discretionary{}{\Wrappedafterbreak\char`\#}{\char`\#}}%
+            \def\PYGZpc{\discretionary{}{\Wrappedafterbreak\char`\%}{\char`\%}}%
+            \def\PYGZdl{\discretionary{}{\Wrappedafterbreak\char`\$}{\char`\$}}%
+            \def\PYGZhy{\discretionary{\char`\-}{\Wrappedafterbreak}{\char`\-}}%
+            \def\PYGZsq{\discretionary{}{\Wrappedafterbreak\textquotesingle}{\textquotesingle}}%
+            \def\PYGZdq{\discretionary{}{\Wrappedafterbreak\char`\"}{\char`\"}}%
+            \def\PYGZti{\discretionary{\char`\~}{\Wrappedafterbreak}{\char`\~}}%
+        }
+        % Some characters . , ; ? ! / are not pygmentized.
+        % This macro makes them "active" and they will insert potential linebreaks
+        \newcommand*\Wrappedbreaksatpunct {%
+            \lccode`\~`\.\lowercase{\def~}{\discretionary{\hbox{\char`\.}}{\Wrappedafterbreak}{\hbox{\char`\.}}}%
+            \lccode`\~`\,\lowercase{\def~}{\discretionary{\hbox{\char`\,}}{\Wrappedafterbreak}{\hbox{\char`\,}}}%
+            \lccode`\~`\;\lowercase{\def~}{\discretionary{\hbox{\char`\;}}{\Wrappedafterbreak}{\hbox{\char`\;}}}%
+            \lccode`\~`\:\lowercase{\def~}{\discretionary{\hbox{\char`\:}}{\Wrappedafterbreak}{\hbox{\char`\:}}}%
+            \lccode`\~`\?\lowercase{\def~}{\discretionary{\hbox{\char`\?}}{\Wrappedafterbreak}{\hbox{\char`\?}}}%
+            \lccode`\~`\!\lowercase{\def~}{\discretionary{\hbox{\char`\!}}{\Wrappedafterbreak}{\hbox{\char`\!}}}%
+            \lccode`\~`\/\lowercase{\def~}{\discretionary{\hbox{\char`\/}}{\Wrappedafterbreak}{\hbox{\char`\/}}}%
+            \catcode`\.\active
+            \catcode`\,\active
+            \catcode`\;\active
+            \catcode`\:\active
+            \catcode`\?\active
+            \catcode`\!\active
+            \catcode`\/\active
+            \lccode`\~`\~
+        }
+    \makeatother
+
+    \let\OriginalVerbatim=\Verbatim
+    \makeatletter
+    \renewcommand{\Verbatim}[1][1]{%
+        %\parskip\z@skip
+        \sbox\Wrappedcontinuationbox {\Wrappedcontinuationsymbol}%
+        \sbox\Wrappedvisiblespacebox {\FV@SetupFont\Wrappedvisiblespace}%
+        \def\FancyVerbFormatLine ##1{\hsize\linewidth
+            \vtop{\raggedright\hyphenpenalty\z@\exhyphenpenalty\z@
+                \doublehyphendemerits\z@\finalhyphendemerits\z@
+                \strut ##1\strut}%
+        }%
+        % If the linebreak is at a space, the latter will be displayed as visible
+        % space at end of first line, and a continuation symbol starts next line.
+        % Stretch/shrink are however usually zero for typewriter font.
+        \def\FV@Space {%
+            \nobreak\hskip\z@ plus\fontdimen3\font minus\fontdimen4\font
+            \discretionary{\copy\Wrappedvisiblespacebox}{\Wrappedafterbreak}
+            {\kern\fontdimen2\font}%
+        }%
+
+        % Allow breaks at special characters using \PYG... macros.
+        \Wrappedbreaksatspecials
+        % Breaks at punctuation characters . , ; ? ! and / need catcode=\active
+        \OriginalVerbatim[#1,codes*=\Wrappedbreaksatpunct]%
+    }
+    \makeatother
+
+    % Exact colors from NB
+    \definecolor{incolor}{HTML}{303F9F}
+    \definecolor{outcolor}{HTML}{D84315}
+    \definecolor{cellborder}{HTML}{CFCFCF}
+    \definecolor{cellbackground}{HTML}{F7F7F7}
+
+    % prompt
+    \makeatletter
+    \newcommand{\boxspacing}{\kern\kvtcb@left@rule\kern\kvtcb@boxsep}
+    \makeatother
+    \newcommand{\prompt}[4]{
+        {\ttfamily\llap{{\color{#2}[#3]:\hspace{3pt}#4}}\vspace{-\baselineskip}}
+    }
+    
+
+    
+    % Prevent overflowing lines due to hard-to-break entities
+    \sloppy
+    % Setup hyperref package
+    \hypersetup{
+      breaklinks=true,  % so long urls are correctly broken across lines
+      colorlinks=true,
+      urlcolor=urlcolor,
+      linkcolor=linkcolor,
+      citecolor=citecolor,
+      }
+    % Slightly bigger margins than the latex defaults
+    
+    \geometry{verbose,tmargin=1in,bmargin=1in,lmargin=1in,rmargin=1in}
+    
+    
+
+\begin{document}
+    
+    \maketitle
+    
+    
+
+    
+    \hypertarget{project-3-multiplication-rate-across-generations-as-a-function-of-aspect-ratio-and-volume}{%
+\section{Project 3: Multiplication rate across generations as a function
+of Aspect Ratio and
+Volume}\label{project-3-multiplication-rate-across-generations-as-a-function-of-aspect-ratio-and-volume}}
+
+    \textbf{General Background Information}
+
+Consider the core of a nuclear reactor. neutrons are, obviously, much
+smaller than the gaps between atoms and their neutral charge causes them
+to not have attractive force to free electrons or any repellant force,
+meaning that they can fairly easily escape the metallic bounds of
+reactor cores once atoms are split through fission. Therefore, it's
+fairly accurate to model the neutrons in a reactor as having no physical
+bounds whatsoever (in the form of a potential field blocking them from
+leaving), and this simulation seeks to investigate how often neutrons
+continue to replicate within this reactor.
+
+As a nuclear reaction progresses, neutrons ``multiply'' into several
+more by triggering further fission reactions in other atoms, and the
+amount of free neutrons that are produced from the triggered fission by
+the previous neutron are considered to be successfully replicated.
+However, as the neutrons leak out of the reactor, they're unlikely to
+return within the core to continue replications, and it's also unlikely
+for them to replicate outside of the core, so for the purposes of this
+reactor, we're only interested in the neutrons that replicate within the
+core, and any neutrons that leak out of the reactor can be said to be
+effectively lost to the reactor altogether.
+
+Therefore, we can model this system using a non-physical bound for the
+reactor core and a growing tree of randomly-generated neutrons for the
+replications: - The reactor core is like a ``line in the sand'' rather
+than a wall: it has no power to stop neutrons from exiting, and they
+will do so randomly, but once they cross the boundary, further progress
+is entirely not considered. - The neutrons are assumed to always induce
+a chain reaction that produces exactly two further free neutrons every
+time, but each neutron that is produced is then sent off in a
+randomly-determined direction and distance from the reaction that
+produced it, and if it ends up outside of the reactor core, then that
+neutron is considered ``lost.''
+
+This, of course, requires an important distinction: each neutron is
+implicitly defined to replicate two further neutrons each time, but the
+effective replication rate is only considering the neutrons that remain
+in the reactor, so for example, a neutron could induce a reaction to
+produce two free neutrons, but if one neutron exits the reactor and the
+other ends within the reactor, then that neutron is said to have only
+replicated a single neutron, and the single neutron that remained in the
+reactor will induce another reaction.
+
+\textbf{Research Question}
+
+With all of the above information in mind, for a given core shape, the
+reactor core is going to eventually reach a specific replication rate.
+Unstable reactor geometries would have replication rates approach zero
+due to too much leakage, and stable reactor geometries will have
+replication rates that stay roughly constant at some non-zero value. The
+focus of this simulation, in particular, is to see how this long-run
+replication rate changes as the geometry of the core changes.
+
+To do this, I've defined the reactor core's geometry as a rectangular
+prism, so for simplicity, we can call it a ``box.'' This means that the
+box's geometry has three parameters: a length \(\ell\), width \(w\), and
+height \(h\). To keep this simulation simple, we'll make the length
+\(\ell\) a function of the width and the height:
+\[\ell = \frac{1}{2} (w + h),\] Then, we can just vary the volume \(V\)
+and the aspect ratio \(R\) with each being explicit functions of only
+width and height: \begin{align}
+R &= \frac{w}{h} \\
+V &= w \ell h = wh\frac{1}{2}(w + h)
+\end{align} then each of the parameters are only a function of \(R\)
+and \(V\): \[\begin{cases}
+w &= R \left(\frac{2V}{R(R+1)}\right)^\frac{1}{3} \\
+h &= \left(\frac{2V}{R(R+1)}\right)^\frac{1}{3} \\
+\ell &= \frac{1}{2} (R + 1) \left(\frac{2V}{R(R+1)}\right)^\frac{1}{3}
+\end{cases}.\]
+
+Now we have a two-dimensional phase space for the simulation, aspect
+ratio \(R\) and volume \(V\), and thus, each box geometry can be defined
+as a phase coordinate \((R,V)\). For each geometry, we can perform a
+singular simulation with a random starting position, then record the
+replication rate \(k_i\) (for an individual simulation \(i\)) after a
+certain number of generations, \(g\). (It's incredibly important that we
+pick \(g\) correctly to best characterize our system, but for now, we'll
+just vaguely state that it's a large enough number to characterize the
+long-term behavior of the system.) We can then perform this individual
+simulation a large number of times with more random starting positions,
+making the overall simulation \(f\) a Monte-Carlo simulation that
+estimates the long-term multiplication rate as \(\mathbf{k}\) based on
+the mean and standard error, \(\overline{k} + \delta k\).
+
+(To be clear, a Monte Carlo simulation is a general class of stochastic
+(random) methods for performing computational calculations. In this
+case, we're calculating a value through performing a high volume of
+random simulations to produce a distribution of values (multiplication
+rates), then selecting the mean and standard error of that distribution
+to act as the final calculation of the value.)
+
+Therefore, thus far, we're producing a mapping using our simulation
+\(f\): \[f(R,V) \mapsto \mathbf{k} = \overline{k} + \delta k.\] In
+particular, however, we'll actually do some preliminary work to ensure
+that the relative error \(\delta k/k\) is sufficiently small, and then,
+we'll only really care about the mean multiplication rate as we'll know
+that it is accurate, reducing this mapping down to just
+\[f(R,V) \mapsto \overline{k}\]
+
+Thus, simply put, the overarching goal is to calculate this mapping for
+each \((R,V)\) over some two-dimensional phase domain \(D\)
+\[D = \{ R_{\min} \le R \le R_{\max} \} \otimes \{ V_{\min} \le V \le V_{\max} \}\]
+and then analyze the results we observe.
+
+In plain language, the research question is ``\emph{How does the average
+multiplication rate across generations change as a function of the
+aspect ratio and area of the containing box?}''
+
+For the hypothesis, one can safely assume from basic intuition that
+smaller volumes should be less likely to retain neutrons, as at an
+infinite volume of the reactor core (and also assuming the entirety of
+all space is filled with fuel in the realistic case), the reaction will
+proceed forever and grow over all space. However, the aspect ratio is
+much more interesting. We can reasonably assume that there should be the
+greatest preference to more even aspect ratios (closer to 1:1), because
+if the width, height, or length of the box is approximately zero, any
+movement of a neutron along the approximately zero axis in
+three-dimensional space will result in ejection.
+
+\textbf{A Quick Note on Lazy Naming}
+
+Before continuing, it's important to note one core stylistic choice that
+I've made: the starting neutron(s) is technically the first generation,
+but I'm referring to it as the zero-th generation. For generations
+beyond the first, I may use the terms ``X-th generation'' and
+``generation X'' interchangably, so for example, I may refer to the
+generation two as the second generation when it's really the third, as
+the only generation where it is really important to make this
+distinction is when making the first generation (generation zero) and
+generation one distinct (and I will not refer to generation one as the
+first generation).
+
+    \textbf{Code Block Summary:} Standard Imports.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{1}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k+kn}{import} \PY{n+nn}{numpy} \PY{k}{as} \PY{n+nn}{np}
+\PY{k+kn}{from} \PY{n+nn}{matplotlib} \PY{k+kn}{import} \PY{n}{pyplot} \PY{k}{as} \PY{n}{plt}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \textbf{Code Block Summary:} Non-standard Imports. This project utilizes
+dataclasses \href{https://docs.python.org/3/library/dataclasses.html}{1}
+for data storage, the collections deque
+\href{https://docs.python.org/3/library/collections.html\#collections.deque}{2}
+for non-recursive breadth-first-search, and pillow
+\href{https://pypi.org/project/pillow/}{3} with io
+\href{https://docs.python.org/3/library/io.html}{4} for image storage.
+Additionally, I'm using itertools
+\href{https://docs.python.org/3/library/itertools.html}{6} to produce
+the list of coordinates making up a 3-D box from a list of dimensions
+and matplotlib's Axes3D
+\href{https://matplotlib.org/3.3.3/api/_as_gen/mpl_toolkits.mplot3d.axes3d.Axes3D.html}{7}
+for plotting said boxes. Lastly, there is time
+\href{https://docs.python.org/3/library/time.html}{9} for function
+timing (debugging information).
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{2}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k+kn}{from} \PY{n+nn}{dataclasses} \PY{k+kn}{import} \PY{n}{dataclass}
+\PY{k+kn}{from} \PY{n+nn}{collections} \PY{k+kn}{import} \PY{n}{deque}
+\PY{k+kn}{from} \PY{n+nn}{PIL} \PY{k+kn}{import} \PY{n}{Image}
+\PY{k+kn}{import} \PY{n+nn}{io}
+
+\PY{k+kn}{from} \PY{n+nn}{itertools} \PY{k+kn}{import} \PY{n}{product}\PY{p}{,} \PY{n}{combinations}
+\PY{k+kn}{from} \PY{n+nn}{mpl\PYZus{}toolkits}\PY{n+nn}{.}\PY{n+nn}{mplot3d} \PY{k+kn}{import} \PY{n}{Axes3D}
+
+\PY{k+kn}{import} \PY{n+nn}{time}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \hypertarget{non-tree-related-helper-functions}{%
+\subsection{(Non-Tree-Related) Helper
+Functions}\label{non-tree-related-helper-functions}}
+
+    \textbf{Code Block Summary:} (\texttt{calculate\_dimensions}) This is a
+helper function to obtain the dimensions of the box given an area and
+aspect ratio. This can be done mathematically.
+
+Let \(V\) be the area and \(R\) be the aspect ratio, and \(w\) be the
+width and \(h\) be the height. As a somewhat trivial definition, to keep
+the phase only in terms of \(w\) and \(h\), we can define the length as
+\(\ell = \frac{1}{2}(w+h)\) (the average between the two values).
+
+Therefore, the aspect ratio (which can still be kept 2-dimensional) is
+\(R = \frac{w}{h}\) and the volume is \begin{equation}
+V = wh\ell = wh\frac{1}{2}(w + h).
+\end{equation} and knowing that \(w = Rh\), this becomes
+\[V = \frac{1}{2} Rh^3 (R + 1)\] which can be rewritten as
+\begin{equation}
+h = \left(\frac{2V}{R(R+1)}\right)^\frac{1}{3}
+\end{equation}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{3}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{def} \PY{n+nf}{calculate\PYZus{}dimensions}\PY{p}{(}\PY{n}{aspect\PYZus{}ratio}\PY{p}{:} \PY{n+nb}{float}\PY{p}{,} \PY{n}{volume}\PY{p}{:} \PY{n+nb}{float}\PY{p}{)}\PY{p}{:}
+    \PY{n}{height} \PY{o}{=} \PY{p}{(}\PY{l+m+mi}{2} \PY{o}{*} \PY{n}{volume} \PY{o}{/} \PY{p}{(}\PY{n}{aspect\PYZus{}ratio} \PY{o}{*} \PY{p}{(}\PY{n}{aspect\PYZus{}ratio} \PY{o}{+} \PY{l+m+mi}{1}\PY{p}{)}\PY{p}{)}\PY{p}{)} \PY{o}{*}\PY{o}{*} \PY{p}{(}\PY{l+m+mi}{1}\PY{o}{/}\PY{l+m+mi}{3}\PY{p}{)}
+    \PY{n}{width}  \PY{o}{=} \PY{n}{aspect\PYZus{}ratio} \PY{o}{*} \PY{n}{height}
+    \PY{n}{length} \PY{o}{=} \PY{p}{(}\PY{n}{width} \PY{o}{+} \PY{n}{height}\PY{p}{)} \PY{o}{/} \PY{l+m+mi}{2}
+    
+    \PY{k}{return} \PY{p}{(}\PY{n}{width}\PY{p}{,} \PY{n}{length}\PY{p}{,} \PY{n}{height}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \textbf{Code Block Summary:} (\texttt{save\_graph\_and\_close}) Standard
+graph saving function. This is the description of this function from
+Project 2: \textgreater{} This function saves graphs to memory to be
+stored into variables, and from there, I can called them again using
+\texttt{display}. This workflow makes managing the Jupyter notebook
+easy, and it also allows me to define all of my graphs together but
+display them in separate cells.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{4}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{def} \PY{n+nf}{save\PYZus{}graph\PYZus{}and\PYZus{}close}\PY{p}{(}\PY{p}{)}\PY{p}{:}
+    \PY{n}{buf} \PY{o}{=} \PY{n}{io}\PY{o}{.}\PY{n}{BytesIO}\PY{p}{(}\PY{p}{)}
+    \PY{n}{plt}\PY{o}{.}\PY{n}{savefig}\PY{p}{(}\PY{n}{buf}\PY{p}{,} \PY{n+nb}{format}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{png}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+    \PY{n}{buf}\PY{o}{.}\PY{n}{seek}\PY{p}{(}\PY{l+m+mi}{0}\PY{p}{)}
+    \PY{n}{graph} \PY{o}{=} \PY{n}{Image}\PY{o}{.}\PY{n}{open}\PY{p}{(}\PY{n}{buf}\PY{p}{)}
+    \PY{n}{plt}\PY{o}{.}\PY{n}{close}\PY{p}{(}\PY{p}{)}
+    \PY{k}{return} \PY{n}{graph}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \hypertarget{tree-generation}{%
+\subsection{Tree Generation}\label{tree-generation}}
+
+    \textbf{Code Block Summary:} (\texttt{get\_next\_neutron\_position})
+This function will randomly determine the ending position of a neutron
+given a starting position. It does this by first determining a random
+angular direction \(\theta \in [0, 2\pi)\) and an azimuthal direction
+\(\phi \in [0, \pi]\) to propagate in alongside a random distance
+calculated as \(d \propto \exp(\lambda)\). From there, the new position
+can be calculated using the old position \(\mathbf{r}_0\) as
+\[\mathbf{r} = \mathbf{r}_0 + d \langle \sin \phi \cos \theta, \sin \phi \sin \theta, \cos \phi \rangle\]
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{5}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{MEAN\PYZus{}FREE\PYZus{}PATH} \PY{o}{=} \PY{l+m+mf}{2.65}
+
+\PY{k}{def} \PY{n+nf}{get\PYZus{}next\PYZus{}neutron\PYZus{}position}\PY{p}{(}\PY{n}{current\PYZus{}position}\PY{p}{:} \PY{n}{np}\PY{o}{.}\PY{n}{array}\PY{p}{)} \PY{o}{\PYZhy{}}\PY{o}{\PYZgt{}} \PY{n}{np}\PY{o}{.}\PY{n}{array}\PY{p}{:}
+\PY{+w}{    }\PY{l+s+sd}{\PYZdq{}\PYZdq{}\PYZdq{}}
+\PY{l+s+sd}{    Generates a random direction for the neutron }
+\PY{l+s+sd}{    and uses the mean\PYZhy{}free\PYZhy{}path to calculate the}
+\PY{l+s+sd}{    next position for the neutron.}
+\PY{l+s+sd}{    \PYZdq{}\PYZdq{}\PYZdq{}}
+    \PY{n}{theta} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{random}\PY{o}{.}\PY{n}{uniform}\PY{p}{(}\PY{l+m+mi}{0}\PY{p}{,} \PY{l+m+mi}{2} \PY{o}{*} \PY{n}{np}\PY{o}{.}\PY{n}{pi}\PY{p}{)}
+    \PY{n}{phi}   \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{random}\PY{o}{.}\PY{n}{uniform}\PY{p}{(}\PY{l+m+mi}{0}\PY{p}{,} \PY{n}{np}\PY{o}{.}\PY{n}{pi}\PY{p}{)}
+    \PY{n}{direction} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{array}\PY{p}{(}\PY{p}{[} \PY{n}{np}\PY{o}{.}\PY{n}{sin}\PY{p}{(}\PY{n}{phi}\PY{p}{)} \PY{o}{*} \PY{n}{np}\PY{o}{.}\PY{n}{cos}\PY{p}{(}\PY{n}{theta}\PY{p}{)}\PY{p}{,} \PY{n}{np}\PY{o}{.}\PY{n}{sin}\PY{p}{(}\PY{n}{phi}\PY{p}{)} \PY{o}{*} \PY{n}{np}\PY{o}{.}\PY{n}{sin}\PY{p}{(}\PY{n}{theta}\PY{p}{)}\PY{p}{,} \PY{n}{np}\PY{o}{.}\PY{n}{cos}\PY{p}{(}\PY{n}{phi}\PY{p}{)} \PY{p}{]}\PY{p}{)}
+    \PY{n}{distance}  \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{random}\PY{o}{.}\PY{n}{exponential}\PY{p}{(}\PY{n}{MEAN\PYZus{}FREE\PYZus{}PATH}\PY{p}{)}
+    
+    \PY{k}{return} \PY{n}{current\PYZus{}position} \PY{o}{+} \PY{n}{distance} \PY{o}{*} \PY{n}{direction}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \textbf{Code Block Summary:} (\texttt{class\ NeutronNode}) This is a
+structure to store Neutron information as a tree element. Each Neutron
+stores its own information (that being, it's starting position
+\(\mathbf{r}_0\), ending position \(\mathbf{r}_{1}\), and then whether
+or not it was lost) alongside a list of pointers to each of its
+``children'' Neutrons.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{6}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n+nd}{@dataclass}
+\PY{k}{class} \PY{n+nc}{NeutronNode}\PY{p}{:}
+    \PY{n}{start\PYZus{}pos}\PY{p}{:} \PY{n}{np}\PY{o}{.}\PY{n}{array}          \PY{o}{=} \PY{k+kc}{None}
+    \PY{n}{end\PYZus{}pos}\PY{p}{:}   \PY{n}{np}\PY{o}{.}\PY{n}{array}          \PY{o}{=} \PY{k+kc}{None}
+    \PY{n}{children}\PY{p}{:}  \PY{n+nb}{list}              \PY{o}{=} \PY{k+kc}{None}
+    \PY{n}{lost}\PY{p}{:}      \PY{n+nb}{bool}              \PY{o}{=} \PY{k+kc}{False}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \textbf{Code Block Summary:} (\texttt{EXAMPLE\_TREE}) This is an example
+tree used for testing purposes, and it shows the power of the tree-based
+data structure for storing Neutron information.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{7}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{EXAMPLE\PYZus{}TREE} \PY{o}{=} \PY{n}{NeutronNode}\PY{p}{(}
+        \PY{n}{start\PYZus{}pos} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{array}\PY{p}{(}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{]}\PY{p}{)}\PY{p}{,} 
+        \PY{n}{end\PYZus{}pos}   \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{array}\PY{p}{(}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{]}\PY{p}{)}\PY{p}{,}
+        
+        \PY{n}{children}  \PY{o}{=} \PY{p}{[}
+            \PY{n}{NeutronNode}\PY{p}{(}
+                \PY{n}{start\PYZus{}pos} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{array}\PY{p}{(}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{]}\PY{p}{)}\PY{p}{,} 
+                \PY{n}{end\PYZus{}pos}   \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{array}\PY{p}{(}\PY{p}{[}\PY{l+m+mi}{2}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{]}\PY{p}{)}\PY{p}{,}
+                
+                \PY{n}{children}  \PY{o}{=} \PY{p}{[}
+                    \PY{n}{NeutronNode}\PY{p}{(}
+                        \PY{n}{start\PYZus{}pos} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{array}\PY{p}{(}\PY{p}{[}\PY{l+m+mi}{2}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{]}\PY{p}{)}\PY{p}{,}
+                        \PY{n}{end\PYZus{}pos}   \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{array}\PY{p}{(}\PY{p}{[}\PY{l+m+mi}{4}\PY{p}{,} \PY{l+m+mi}{3}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{]}\PY{p}{)}
+                    \PY{p}{)}\PY{p}{,}
+                    
+                    \PY{n}{NeutronNode}\PY{p}{(}
+                        \PY{n}{start\PYZus{}pos} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{array}\PY{p}{(}\PY{p}{[}\PY{l+m+mi}{2}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{]}\PY{p}{)}\PY{p}{,}
+                        \PY{n}{end\PYZus{}pos}   \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{array}\PY{p}{(}\PY{p}{[}\PY{l+m+mi}{3}\PY{p}{,} \PY{l+m+mi}{2}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{]}\PY{p}{)}
+                    \PY{p}{)}
+                \PY{p}{]}
+            \PY{p}{)}\PY{p}{,}
+            
+            \PY{n}{NeutronNode}\PY{p}{(}
+                \PY{n}{start\PYZus{}pos} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{array}\PY{p}{(}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{]}\PY{p}{)}\PY{p}{,} 
+                \PY{n}{end\PYZus{}pos}   \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{array}\PY{p}{(}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{,} \PY{l+m+mi}{2}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{]}\PY{p}{)}
+            \PY{p}{)}
+        \PY{p}{]}
+    \PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \textbf{Code Block Summary:} (\texttt{print\_tree}) This is a simple
+recursive helper method to print a tree in a file-tree format, allowing
+for quick debugging of Neutron Trees.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{8}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{def} \PY{n+nf}{print\PYZus{}tree}\PY{p}{(}\PY{n}{node}\PY{p}{:} \PY{n}{NeutronNode}\PY{p}{,} \PY{n}{indent}\PY{p}{:} \PY{n+nb}{int} \PY{o}{=} \PY{l+m+mi}{0}\PY{p}{)}\PY{p}{:}
+\PY{+w}{    }\PY{l+s+sd}{\PYZdq{}\PYZdq{}\PYZdq{}}
+\PY{l+s+sd}{    Recursively pretty\PYZhy{}print a neutron trajectory tree.}
+\PY{l+s+sd}{    \PYZdq{}\PYZdq{}\PYZdq{}}
+    \PY{k}{if} \PY{n}{node} \PY{o+ow}{is} \PY{k+kc}{None}\PY{p}{:}
+        \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{ }\PY{l+s+s2}{\PYZdq{}} \PY{o}{*} \PY{n}{indent} \PY{o}{+} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{(empty node)}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+        \PY{k}{return}
+    
+    \PY{n}{space} \PY{o}{=} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{  }\PY{l+s+s2}{\PYZdq{}} \PY{o}{*} \PY{n}{indent}
+    \PY{n}{start} \PY{o}{=} \PY{n+nb}{tuple}\PY{p}{(}\PY{n}{np}\PY{o}{.}\PY{n}{round}\PY{p}{(}\PY{n}{node}\PY{o}{.}\PY{n}{start\PYZus{}pos}\PY{p}{,} \PY{l+m+mi}{2}\PY{p}{)}\PY{o}{.}\PY{n}{tolist}\PY{p}{(}\PY{p}{)}\PY{p}{)} \PY{k}{if} \PY{n}{node}\PY{o}{.}\PY{n}{start\PYZus{}pos} \PY{o+ow}{is} \PY{o+ow}{not} \PY{k+kc}{None} \PY{k}{else} \PY{k+kc}{None}
+    \PY{n}{end}   \PY{o}{=} \PY{n+nb}{tuple}\PY{p}{(}\PY{n}{np}\PY{o}{.}\PY{n}{round}\PY{p}{(}\PY{n}{node}\PY{o}{.}\PY{n}{end\PYZus{}pos}\PY{p}{,} \PY{l+m+mi}{2}\PY{p}{)}\PY{o}{.}\PY{n}{tolist}\PY{p}{(}\PY{p}{)}\PY{p}{)} \PY{k}{if} \PY{n}{node}\PY{o}{.}\PY{n}{end\PYZus{}pos} \PY{o+ow}{is} \PY{o+ow}{not} \PY{k+kc}{None} \PY{k}{else} \PY{k+kc}{None}
+    \PY{n}{status} \PY{o}{=} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{lost}\PY{l+s+s2}{\PYZdq{}} \PY{k}{if} \PY{n}{node}\PY{o}{.}\PY{n}{lost} \PY{k}{else} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{active}\PY{l+s+s2}{\PYZdq{}}
+    
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+si}{\PYZob{}}\PY{n}{space}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{-> }\PY{l+s+si}{\PYZob{}}\PY{n}{status}\PY{o}{.}\PY{n}{upper}\PY{p}{(}\PY{p}{)}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{  start=}\PY{l+s+si}{\PYZob{}}\PY{n}{start}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{  ->  end=}\PY{l+s+si}{\PYZob{}}\PY{n}{end}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+    
+    \PY{k}{if} \PY{n}{node}\PY{o}{.}\PY{n}{children}\PY{p}{:}
+        \PY{k}{for} \PY{n}{child} \PY{o+ow}{in} \PY{n}{node}\PY{o}{.}\PY{n}{children}\PY{p}{:}
+            \PY{n}{print\PYZus{}tree}\PY{p}{(}\PY{n}{child}\PY{p}{,} \PY{n}{indent} \PY{o}{+} \PY{l+m+mi}{1}\PY{p}{)}
+            
+\PY{n}{print\PYZus{}tree}\PY{p}{(}\PY{n}{EXAMPLE\PYZus{}TREE}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+-> ACTIVE  start=(0, 0, 0)  ->  end=(1, 1, 0)
+  -> ACTIVE  start=(1, 1, 0)  ->  end=(2, 1, 0)
+    -> ACTIVE  start=(2, 1, 0)  ->  end=(4, 3, 0)
+    -> ACTIVE  start=(2, 1, 0)  ->  end=(3, 2, 0)
+  -> ACTIVE  start=(1, 1, 0)  ->  end=(1, 2, 0)
+    \end{Verbatim}
+
+    \textbf{Code Block Summary:} (\texttt{traverse\_tree}) A non-recursive
+helper method for traversing a tree. It's used to simplify tree
+traversal from having to implement a tree traversal function each time
+with using Python's built-in collection iteration syntax, i.e.,
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\ControlFlowTok{for}\NormalTok{ start\_pos, end\_pos, generation }\KeywordTok{in}\NormalTok{ traverse\_tree(tree):}
+\NormalTok{    do\_something(start\_pos, end\_pos, generation)}
+\end{Highlighting}
+\end{Shaded}
+
+This helper is implemented using non-recursive Breadth-first search
+\href{https://en.wikipedia.org/wiki/Breadth-first_search}{6}.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{9}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{def} \PY{n+nf}{traverse\PYZus{}tree}\PY{p}{(}\PY{n}{root}\PY{p}{:} \PY{n}{NeutronNode}\PY{p}{)}\PY{p}{:}
+\PY{+w}{    }\PY{l+s+sd}{\PYZdq{}\PYZdq{}\PYZdq{}}
+\PY{l+s+sd}{    A simple method for traversing the tree using BFS}
+\PY{l+s+sd}{    without having to re\PYZhy{}implement it each time.}
+\PY{l+s+sd}{    \PYZdq{}\PYZdq{}\PYZdq{}}
+    \PY{k}{if} \PY{n}{root} \PY{o+ow}{is} \PY{k+kc}{None}\PY{p}{:}
+        \PY{k}{return}
+
+    \PY{c+c1}{\PYZsh{} (node, generation)}
+    \PY{n}{queue} \PY{o}{=} \PY{n}{deque}\PY{p}{(}\PY{p}{[}\PY{p}{(}\PY{n}{root}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{)}\PY{p}{]}\PY{p}{)}
+
+    \PY{k}{while} \PY{n}{queue}\PY{p}{:}
+        \PY{n}{node}\PY{p}{,} \PY{n}{generation} \PY{o}{=} \PY{n}{queue}\PY{o}{.}\PY{n}{popleft}\PY{p}{(}\PY{p}{)}
+
+        \PY{c+c1}{\PYZsh{} yield data for the current node}
+        \PY{k}{yield} \PY{n}{node}\PY{p}{,} \PY{n}{generation}
+
+        \PY{c+c1}{\PYZsh{} enqueue children if they exist}
+        \PY{k}{if} \PY{n}{node}\PY{o}{.}\PY{n}{children}\PY{p}{:}
+            \PY{k}{for} \PY{n}{child} \PY{o+ow}{in} \PY{n}{node}\PY{o}{.}\PY{n}{children}\PY{p}{:}
+                \PY{n}{queue}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{p}{(}\PY{n}{child}\PY{p}{,} \PY{n}{generation} \PY{o}{+} \PY{l+m+mi}{1}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{10}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{def} \PY{n+nf}{in\PYZus{}bound}\PY{p}{(}\PY{n}{value}\PY{p}{,} \PY{n}{bound}\PY{p}{)}\PY{p}{:}
+\PY{+w}{    }\PY{l+s+sd}{\PYZdq{}\PYZdq{}\PYZdq{}}
+\PY{l+s+sd}{    Helper function to simplify bounds checking}
+\PY{l+s+sd}{    \PYZdq{}\PYZdq{}\PYZdq{}}
+    \PY{k}{return} \PY{l+m+mi}{0} \PY{o}{\PYZlt{}}\PY{o}{=} \PY{n}{value} \PY{o}{\PYZlt{}}\PY{o}{=} \PY{n}{bound}
+
+\PY{k}{def} \PY{n+nf}{bounded\PYZus{}in\PYZus{}dimensions}\PY{p}{(}\PY{n}{pos}\PY{p}{,} \PY{n}{dimensions}\PY{p}{)}\PY{p}{:}
+\PY{+w}{    }\PY{l+s+sd}{\PYZdq{}\PYZdq{}\PYZdq{}}
+\PY{l+s+sd}{    Checks to see if a position is within the given dimensions}
+\PY{l+s+sd}{    \PYZdq{}\PYZdq{}\PYZdq{}}
+    \PY{n}{bounded} \PY{o}{=} \PY{k+kc}{True}
+    \PY{k}{for} \PY{n}{i}\PY{p}{,} \PY{n}{dim} \PY{o+ow}{in} \PY{n+nb}{enumerate}\PY{p}{(}\PY{n}{dimensions}\PY{p}{)}\PY{p}{:}
+        \PY{n}{bounded} \PY{o}{=} \PY{n}{bounded} \PY{o+ow}{and} \PY{l+m+mi}{0} \PY{o}{\PYZlt{}}\PY{o}{=} \PY{n}{pos}\PY{p}{[}\PY{n}{i}\PY{p}{]} \PY{o}{\PYZlt{}}\PY{o}{=} \PY{n}{dim}
+    \PY{k}{return} \PY{n}{bounded}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \textbf{Code Block Summary} (\texttt{random\_position\_in\_box}) This is
+a helper function for obtaining a random position within the box based
+on its dimensions \((w,h)\) for the sake of initial Neutron placement at
+the beginning of a tree.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{11}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{def} \PY{n+nf}{random\PYZus{}position\PYZus{}in\PYZus{}box}\PY{p}{(}\PY{n}{dimensions}\PY{p}{:} \PY{n+nb}{tuple}\PY{p}{[}\PY{n+nb}{float}\PY{p}{]}\PY{p}{)} \PY{o}{\PYZhy{}}\PY{o}{\PYZgt{}} \PY{n}{np}\PY{o}{.}\PY{n}{array}\PY{p}{:}
+\PY{+w}{    }\PY{l+s+sd}{\PYZdq{}\PYZdq{}\PYZdq{}}
+\PY{l+s+sd}{    Given `dimensions` = (width, length, height), returns}
+\PY{l+s+sd}{    a random (x,y,z) where 0 \PYZlt{}= x \PYZlt{}= width and}
+\PY{l+s+sd}{    0 \PYZlt{}= y \PYZlt{}= height.}
+\PY{l+s+sd}{    \PYZdq{}\PYZdq{}\PYZdq{}}
+    \PY{k}{return} \PY{n}{np}\PY{o}{.}\PY{n}{array}\PY{p}{(}\PY{p}{[}\PY{n}{np}\PY{o}{.}\PY{n}{random}\PY{o}{.}\PY{n}{uniform}\PY{p}{(}\PY{l+m+mi}{0}\PY{p}{,} \PY{n}{dim}\PY{p}{)} \PY{k}{for} \PY{n}{dim} \PY{o+ow}{in} \PY{n}{dimensions}\PY{p}{]}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \textbf{Code Block Summary:} (\texttt{is\_outside\_box}) This is a
+helper method for determining whether a position \((x,y)\) is outside of
+the box given dimensions \((w,h)\), by checking if it is: - Horizontally
+outside the box, to the left: \(x < 0\) - Horizontally outside the box,
+to the right: \(x > w\) - Vertically outside the box, below: \(y < 0\) -
+Vertically outside the box, above: \(y > h\)
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{12}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{def} \PY{n+nf}{is\PYZus{}outside\PYZus{}box}\PY{p}{(}\PY{n}{pos}\PY{p}{:} \PY{n}{np}\PY{o}{.}\PY{n}{array}\PY{p}{,} \PY{n}{dimensions}\PY{p}{:} \PY{n+nb}{tuple}\PY{p}{[}\PY{n+nb}{float}\PY{p}{]}\PY{p}{)} \PY{o}{\PYZhy{}}\PY{o}{\PYZgt{}} \PY{n+nb}{bool}\PY{p}{:}
+\PY{+w}{    }\PY{l+s+sd}{\PYZdq{}\PYZdq{}\PYZdq{}}
+\PY{l+s+sd}{    Given pos        = (x, y, z), }
+\PY{l+s+sd}{          dimensions = (w, l, h),}
+\PY{l+s+sd}{    returns if the position is outside of the dimensions.}
+\PY{l+s+sd}{    \PYZdq{}\PYZdq{}\PYZdq{}}
+    \PY{k}{return} \PY{o+ow}{not} \PY{n}{bounded\PYZus{}in\PYZus{}dimensions}\PY{p}{(}\PY{n}{pos}\PY{p}{,} \PY{n}{dimensions}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \textbf{Code Block Summary:} (\texttt{generate\_children}) This function
+generates the list of children for a given node based on the starting
+position of the children (the ending position of the parent)
+\(\mathbf{r}_0\), the number of children to be generated \(n\), and the
+dimensions of the box \((w,h)\).
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{13}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{def} \PY{n+nf}{generate\PYZus{}children}\PY{p}{(}\PY{n}{start\PYZus{}pos}\PY{p}{:} \PY{n}{np}\PY{o}{.}\PY{n}{array}\PY{p}{,} \PY{n}{n}\PY{p}{:} \PY{n+nb}{int}\PY{p}{,} \PY{n}{dimensions}\PY{p}{:} \PY{n+nb}{tuple}\PY{p}{[}\PY{n+nb}{float}\PY{p}{]}\PY{p}{)} \PY{o}{\PYZhy{}}\PY{o}{\PYZgt{}} \PY{n+nb}{list}\PY{p}{[}\PY{n}{NeutronNode}\PY{p}{]}\PY{p}{:}
+\PY{+w}{    }\PY{l+s+sd}{\PYZdq{}\PYZdq{}\PYZdq{}}
+\PY{l+s+sd}{    Given start\PYZus{}pos}
+\PY{l+s+sd}{    \PYZdq{}\PYZdq{}\PYZdq{}}
+    \PY{n}{children} \PY{o}{=} \PY{p}{[}\PY{p}{]}
+    \PY{k}{for} \PY{n}{\PYZus{}} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{n}\PY{p}{)}\PY{p}{:}
+        \PY{n}{end\PYZus{}pos} \PY{o}{=} \PY{n}{get\PYZus{}next\PYZus{}neutron\PYZus{}position}\PY{p}{(}\PY{n}{start\PYZus{}pos}\PY{p}{)}
+        
+        \PY{n}{children}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{n}{NeutronNode}\PY{p}{(}
+            \PY{n}{start\PYZus{}pos} \PY{o}{=} \PY{n}{start\PYZus{}pos}\PY{p}{,}
+            \PY{n}{end\PYZus{}pos}   \PY{o}{=} \PY{n}{end\PYZus{}pos}\PY{p}{,}
+            \PY{n}{lost}      \PY{o}{=} \PY{n}{is\PYZus{}outside\PYZus{}box}\PY{p}{(}\PY{n}{end\PYZus{}pos}\PY{p}{,} \PY{n}{dimensions}\PY{p}{)}
+        \PY{p}{)}\PY{p}{)}
+    \PY{k}{return} \PY{n}{children}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \textbf{Code Block Summary:} (\texttt{generate\_tree\_recursive}) This
+is a recursive helper function for performing the generative recursion
+necessary to build this tree. It was produced using the generative
+recursion template from CPSC 110
+\href{https://cs110.students.cs.ubc.ca/reference/design-recipes.html\#GenRec}{5}.
+Generation terminates for all nodes once reaching the generation limit
+and for any node that ends up becoming ``lost'' (or falls outside of the
+box on its end position).
+
+This is an in-place generative recursion, so no values are returned in
+this function, pointers are just appended to the end of the same tree.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{14}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{def} \PY{n+nf}{generate\PYZus{}tree\PYZus{}recursive}\PY{p}{(}\PY{n}{parent}\PY{p}{:} \PY{n}{NeutronNode}\PY{p}{,} \PY{n}{gen}\PY{p}{:} \PY{n+nb}{int}\PY{p}{,} \PY{n}{max\PYZus{}generations}\PY{p}{:} \PY{n+nb}{int}\PY{p}{,} \PY{n}{dimensions}\PY{p}{:} \PY{n+nb}{tuple}\PY{p}{[}\PY{n+nb}{float}\PY{p}{]}\PY{p}{)}\PY{p}{:}
+\PY{+w}{    }\PY{l+s+sd}{\PYZdq{}\PYZdq{}\PYZdq{}}
+\PY{l+s+sd}{    Generates the neutron tree using in place tail recursion }
+\PY{l+s+sd}{    \PYZdq{}\PYZdq{}\PYZdq{}}
+    
+    \PY{k}{if} \PY{n}{gen} \PY{o}{\PYZgt{}}\PY{o}{=} \PY{n}{max\PYZus{}generations} \PY{o+ow}{or} \PY{n}{parent}\PY{o}{.}\PY{n}{lost}\PY{p}{:}
+        \PY{n}{parent}\PY{o}{.}\PY{n}{children} \PY{o}{=} \PY{p}{[}\PY{p}{]}
+        \PY{k}{return}
+    
+    \PY{n}{parent}\PY{o}{.}\PY{n}{children} \PY{o}{=} \PY{n}{generate\PYZus{}children}\PY{p}{(}\PY{n}{parent}\PY{o}{.}\PY{n}{end\PYZus{}pos}\PY{p}{,} \PY{l+m+mi}{2}\PY{p}{,} \PY{n}{dimensions}\PY{p}{)}
+    \PY{k}{for} \PY{n}{child} \PY{o+ow}{in} \PY{n}{parent}\PY{o}{.}\PY{n}{children}\PY{p}{:}
+        \PY{n}{generate\PYZus{}tree\PYZus{}recursive}\PY{p}{(}\PY{n}{child}\PY{p}{,} \PY{n}{gen} \PY{o}{+} \PY{l+m+mi}{1}\PY{p}{,} \PY{n}{max\PYZus{}generations}\PY{p}{,} \PY{n}{dimensions}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \textbf{Code Block Summary:} (\texttt{generate\_tree}) This is the
+non-recursive root function used to begin the recursion necessary to
+build the Neutron tree using by initiating
+\texttt{generate\_tree\_recursive} given the number of generations and
+the dimensions of the box.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{15}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{def} \PY{n+nf}{generate\PYZus{}tree}\PY{p}{(}\PY{n}{num\PYZus{}generations}\PY{p}{:} \PY{n+nb}{int}\PY{p}{,} \PY{n}{dimensions}\PY{p}{:} \PY{n+nb}{tuple}\PY{p}{[}\PY{n+nb}{float}\PY{p}{]}\PY{p}{)} \PY{o}{\PYZhy{}}\PY{o}{\PYZgt{}} \PY{n}{NeutronNode}\PY{p}{:}
+\PY{+w}{    }\PY{l+s+sd}{\PYZdq{}\PYZdq{}\PYZdq{}}
+\PY{l+s+sd}{    Calculates the trajectories (start and end points) for each }
+\PY{l+s+sd}{    Neutron Generation by building a Neutron tree with BFS alongside}
+\PY{l+s+sd}{    the replication numbers for each generation transition.}
+\PY{l+s+sd}{    \PYZdq{}\PYZdq{}\PYZdq{}}
+    \PY{n}{initial\PYZus{}pos} \PY{o}{=} \PY{n}{random\PYZus{}position\PYZus{}in\PYZus{}box}\PY{p}{(}\PY{n}{dimensions}\PY{p}{)}
+    \PY{n}{end\PYZus{}pos}     \PY{o}{=} \PY{n}{get\PYZus{}next\PYZus{}neutron\PYZus{}position}\PY{p}{(}\PY{n}{initial\PYZus{}pos}\PY{p}{)}
+    
+    \PY{n}{root} \PY{o}{=} \PY{n}{NeutronNode}\PY{p}{(}
+        \PY{n}{start\PYZus{}pos} \PY{o}{=} \PY{n}{initial\PYZus{}pos}\PY{p}{,}
+        \PY{n}{end\PYZus{}pos}   \PY{o}{=} \PY{n}{end\PYZus{}pos}\PY{p}{,}
+        \PY{n}{lost}      \PY{o}{=} \PY{n}{is\PYZus{}outside\PYZus{}box}\PY{p}{(}\PY{n}{end\PYZus{}pos}\PY{p}{,} \PY{n}{dimensions}\PY{p}{)}
+    \PY{p}{)}
+    
+    \PY{n}{generate\PYZus{}tree\PYZus{}recursive}\PY{p}{(}\PY{n}{root}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{,} \PY{n}{num\PYZus{}generations}\PY{p}{,} \PY{n}{dimensions}\PY{p}{)}
+    
+    \PY{k}{return} \PY{n}{root}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \hypertarget{plotting}{%
+\subsection{Plotting}\label{plotting}}
+
+    \textbf{Code Block Summary:} (\texttt{class\ SimulationResult}) This is
+a structure for storing any graphs generated from a given simulation (if
+such graphs are generated under \texttt{simulate}) alongside the final
+Neutron tree(s) that are generated.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{16}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n+nd}{@dataclass}
+\PY{k}{class} \PY{n+nc}{SimulationResult}\PY{p}{:}
+    \PY{n}{trajectories\PYZus{}graph}\PY{p}{:} \PY{n}{Image}
+    \PY{n}{result\PYZus{}trees}\PY{p}{:}       \PY{n}{NeutronNode}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \textbf{Code Block Summary} (\texttt{draw\_3d\_box}) This is a method to
+greatly simplify plotting a wireframe of the box on a 3-dimensional plot
+using only two sets of 3-dimensional coordinates (and origin point and
+the dimensions of the box).
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{17}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{def} \PY{n+nf}{draw\PYZus{}3d\PYZus{}box}\PY{p}{(}\PY{n}{ax}\PY{p}{,} \PY{n}{origin}\PY{p}{,} \PY{n}{dimensions}\PY{p}{,} \PY{n}{edgecolor}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{red}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{linestyle}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{dashed}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{linewidth}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{)}\PY{p}{:}
+\PY{+w}{    }\PY{l+s+sd}{\PYZdq{}\PYZdq{}\PYZdq{}}
+\PY{l+s+sd}{    Draws a 3D wireframe box on a given 3D axes.}
+\PY{l+s+sd}{    \PYZdq{}\PYZdq{}\PYZdq{}}
+    \PY{c+c1}{\PYZsh{} Define the 8 vertices of the box relative to the origin}
+    \PY{n}{x\PYZus{}min}\PY{p}{,} \PY{n}{y\PYZus{}min}\PY{p}{,} \PY{n}{z\PYZus{}min} \PY{o}{=} \PY{n}{origin}
+    \PY{n}{width}\PY{p}{,} \PY{n}{height}\PY{p}{,} \PY{n}{depth} \PY{o}{=} \PY{n}{dimensions}
+    \PY{n}{x\PYZus{}max}\PY{p}{,} \PY{n}{y\PYZus{}max}\PY{p}{,} \PY{n}{z\PYZus{}max} \PY{o}{=} \PY{n}{x\PYZus{}min} \PY{o}{+} \PY{n}{width}\PY{p}{,} \PY{n}{y\PYZus{}min} \PY{o}{+} \PY{n}{height}\PY{p}{,} \PY{n}{z\PYZus{}min} \PY{o}{+} \PY{n}{depth}
+
+    \PY{c+c1}{\PYZsh{} Create a list of all 8 vertex coordinates}
+    \PY{n}{vertices} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{array}\PY{p}{(}\PY{n+nb}{list}\PY{p}{(}\PY{n}{product}\PY{p}{(}\PY{p}{[}\PY{n}{x\PYZus{}min}\PY{p}{,} \PY{n}{x\PYZus{}max}\PY{p}{]}\PY{p}{,} \PY{p}{[}\PY{n}{y\PYZus{}min}\PY{p}{,} \PY{n}{y\PYZus{}max}\PY{p}{]}\PY{p}{,} \PY{p}{[}\PY{n}{z\PYZus{}min}\PY{p}{,} \PY{n}{z\PYZus{}max}\PY{p}{]}\PY{p}{)}\PY{p}{)}\PY{p}{)}
+
+    \PY{c+c1}{\PYZsh{} Draw the 12 edges by iterating over combinations of vertices}
+    \PY{k}{for} \PY{n}{s}\PY{p}{,} \PY{n}{e} \PY{o+ow}{in} \PY{n}{combinations}\PY{p}{(}\PY{n}{vertices}\PY{p}{,} \PY{l+m+mi}{2}\PY{p}{)}\PY{p}{:}
+        \PY{c+c1}{\PYZsh{} Only draw an edge if the vertices are connected along a single axis}
+        \PY{k}{if} \PY{n}{np}\PY{o}{.}\PY{n}{sum}\PY{p}{(}\PY{n}{np}\PY{o}{.}\PY{n}{abs}\PY{p}{(}\PY{n}{s} \PY{o}{\PYZhy{}} \PY{n}{e}\PY{p}{)}\PY{p}{)} \PY{o}{==} \PY{n}{width} \PY{o+ow}{or} \PY{n}{np}\PY{o}{.}\PY{n}{sum}\PY{p}{(}\PY{n}{np}\PY{o}{.}\PY{n}{abs}\PY{p}{(}\PY{n}{s} \PY{o}{\PYZhy{}} \PY{n}{e}\PY{p}{)}\PY{p}{)} \PY{o}{==} \PY{n}{height} \PY{o+ow}{or} \PY{n}{np}\PY{o}{.}\PY{n}{sum}\PY{p}{(}\PY{n}{np}\PY{o}{.}\PY{n}{abs}\PY{p}{(}\PY{n}{s} \PY{o}{\PYZhy{}} \PY{n}{e}\PY{p}{)}\PY{p}{)} \PY{o}{==} \PY{n}{depth}\PY{p}{:}
+            \PY{n}{ax}\PY{o}{.}\PY{n}{plot3D}\PY{p}{(}\PY{o}{*}\PY{n+nb}{zip}\PY{p}{(}\PY{n}{s}\PY{p}{,} \PY{n}{e}\PY{p}{)}\PY{p}{,} \PY{n}{color}\PY{o}{=}\PY{n}{edgecolor}\PY{p}{,} \PY{n}{linestyle}\PY{o}{=}\PY{n}{linestyle}\PY{p}{,} \PY{n}{linewidth}\PY{o}{=}\PY{n}{linewidth}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \textbf{Code Block Summary:} (\texttt{plot\_trajectories}) This function
+plots a 2-D graph of the trajectories of the Neutrons, producing the
+final tree-like structure colored and labelled by generation.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{18}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{def} \PY{n+nf}{plot\PYZus{}trajectories}\PY{p}{(}\PY{n}{trees}\PY{p}{:} \PY{n+nb}{list}\PY{p}{[}\PY{n}{NeutronNode}\PY{p}{]}\PY{p}{,} \PY{n}{num\PYZus{}generations}\PY{p}{:} \PY{n+nb}{int}\PY{p}{,} \PY{n}{dimensions}\PY{p}{:} \PY{n+nb}{tuple}\PY{p}{[}\PY{n+nb}{float}\PY{p}{]}\PY{p}{,} \PY{n}{padding}\PY{p}{:} \PY{n+nb}{int} \PY{o}{=} \PY{l+m+mi}{5}\PY{p}{)}\PY{p}{:}
+\PY{+w}{    }\PY{l+s+sd}{\PYZdq{}\PYZdq{}\PYZdq{}}
+\PY{l+s+sd}{    Plots the final trajectories of each neutron tree }
+\PY{l+s+sd}{    simulation, colored and labeled by generation.}
+\PY{l+s+sd}{    \PYZdq{}\PYZdq{}\PYZdq{}}
+    \PY{n}{fig} \PY{o}{=} \PY{n}{plt}\PY{o}{.}\PY{n}{figure}\PY{p}{(}\PY{p}{)}
+    \PY{n}{ax} \PY{o}{=} \PY{n}{fig}\PY{o}{.}\PY{n}{add\PYZus{}subplot}\PY{p}{(}\PY{n}{projection}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{3d}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+    
+    \PY{c+c1}{\PYZsh{} For legend handles (store one Line2D per generation)}
+    \PY{n}{generation\PYZus{}handles} \PY{o}{=} \PY{p}{\PYZob{}}\PY{p}{\PYZcb{}}
+    \PY{n}{colors} \PY{o}{=} \PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{blue}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{red}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{green}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{orange}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} 
+              \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{magenta}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{tab:gray}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{tab:olive}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} 
+              \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{tab:brown}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{tab:pink}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{tab:cyan}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} 
+              \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{xkcd:algae}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{xkcd:crimson}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{xkcd:ochre}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+              \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{xkcd:leaf green}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{xkcd:sea blue}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{xkcd:sage}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}
+    
+    \PY{c+c1}{\PYZsh{} Traverse the trees}
+    \PY{k}{for} \PY{n}{tree} \PY{o+ow}{in} \PY{n}{trees}\PY{p}{:}
+        \PY{k}{for} \PY{n}{neutron}\PY{p}{,} \PY{n}{generation} \PY{o+ow}{in} \PY{n}{traverse\PYZus{}tree}\PY{p}{(}\PY{n}{tree}\PY{p}{)}\PY{p}{:}
+            \PY{c+c1}{\PYZsh{} Just in case of errors}
+            \PY{k}{if} \PY{n}{neutron}\PY{o}{.}\PY{n}{start\PYZus{}pos} \PY{o+ow}{is} \PY{k+kc}{None} \PY{o+ow}{or} \PY{n}{neutron}\PY{o}{.}\PY{n}{end\PYZus{}pos} \PY{o+ow}{is} \PY{k+kc}{None}\PY{p}{:}
+                \PY{k}{continue}
+                
+            \PY{n}{color} \PY{o}{=} \PY{n}{colors}\PY{p}{[}\PY{n}{generation}\PY{p}{]}
+            
+            \PY{c+c1}{\PYZsh{} Draw the trajectory line}
+            \PY{p}{(}\PY{n}{line}\PY{p}{,}\PY{p}{)} \PY{o}{=} \PY{n}{ax}\PY{o}{.}\PY{n}{plot}\PY{p}{(}
+                \PY{p}{[}\PY{n}{neutron}\PY{o}{.}\PY{n}{start\PYZus{}pos}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{,} \PY{n}{neutron}\PY{o}{.}\PY{n}{end\PYZus{}pos}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{]}\PY{p}{,}
+                \PY{p}{[}\PY{n}{neutron}\PY{o}{.}\PY{n}{start\PYZus{}pos}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{,} \PY{n}{neutron}\PY{o}{.}\PY{n}{end\PYZus{}pos}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{]}\PY{p}{,}
+                \PY{p}{[}\PY{n}{neutron}\PY{o}{.}\PY{n}{start\PYZus{}pos}\PY{p}{[}\PY{l+m+mi}{2}\PY{p}{]}\PY{p}{,} \PY{n}{neutron}\PY{o}{.}\PY{n}{end\PYZus{}pos}\PY{p}{[}\PY{l+m+mi}{2}\PY{p}{]}\PY{p}{]}\PY{p}{,}
+                \PY{n}{color}\PY{o}{=}\PY{n}{color}\PY{p}{,}
+                \PY{n}{alpha}\PY{o}{=}\PY{l+m+mf}{0.8}\PY{p}{,}
+                \PY{n}{linewidth}\PY{o}{=}\PY{l+m+mf}{1.2}\PY{p}{,}
+                \PY{n}{label}\PY{o}{=}\PY{l+s+sa}{f}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Gen }\PY{l+s+si}{\PYZob{}}\PY{n}{generation}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{\PYZdq{}}
+            \PY{p}{)}
+
+            \PY{c+c1}{\PYZsh{} Mark start (circle) and end (X)}
+            \PY{n}{ax}\PY{o}{.}\PY{n}{scatter}\PY{p}{(}\PY{o}{*}\PY{n}{neutron}\PY{o}{.}\PY{n}{end\PYZus{}pos}\PY{p}{,} \PY{n}{color}\PY{o}{=}\PY{n}{color}\PY{p}{,} \PY{n}{marker}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{o}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{s}\PY{o}{=}\PY{l+m+mf}{12.5}\PY{p}{,} \PY{n}{alpha}\PY{o}{=}\PY{l+m+mf}{0.7}\PY{p}{)}
+
+            \PY{c+c1}{\PYZsh{} Save one handle per generation for legend}
+            \PY{k}{if} \PY{n}{generation} \PY{o+ow}{not} \PY{o+ow}{in} \PY{n}{generation\PYZus{}handles}\PY{p}{:}
+                \PY{n}{generation\PYZus{}handles}\PY{p}{[}\PY{n}{generation}\PY{p}{]} \PY{o}{=} \PY{n}{line}
+
+    \PY{c+c1}{\PYZsh{} Add legend (one entry per generation)}
+    \PY{n}{ax}\PY{o}{.}\PY{n}{legend}\PY{p}{(}
+        \PY{n}{handles}\PY{o}{=}\PY{p}{[}\PY{n}{generation\PYZus{}handles}\PY{p}{[}\PY{n}{g}\PY{p}{]} \PY{k}{for} \PY{n}{g} \PY{o+ow}{in} \PY{n+nb}{sorted}\PY{p}{(}\PY{n}{generation\PYZus{}handles}\PY{p}{)}\PY{p}{]}\PY{p}{,}
+        \PY{n}{labels}\PY{o}{=}\PY{p}{[}\PY{l+s+sa}{f}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Generation }\PY{l+s+si}{\PYZob{}}\PY{n}{g}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{\PYZdq{}} \PY{k}{for} \PY{n}{g} \PY{o+ow}{in} \PY{n+nb}{sorted}\PY{p}{(}\PY{n}{generation\PYZus{}handles}\PY{p}{)}\PY{p}{]}\PY{p}{,}
+        \PY{n}{title}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Generations}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,}
+        \PY{n}{loc}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{upper right}\PY{l+s+s2}{\PYZdq{}}
+    \PY{p}{)}
+
+    \PY{c+c1}{\PYZsh{} Labels}
+    \PY{n}{ax}\PY{o}{.}\PY{n}{set\PYZus{}title}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Neutron Branching Paths by Generation}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+    \PY{n}{ax}\PY{o}{.}\PY{n}{set\PYZus{}xlabel}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{x (m)}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+    \PY{n}{ax}\PY{o}{.}\PY{n}{set\PYZus{}ylabel}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{y (m)}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+    \PY{n}{ax}\PY{o}{.}\PY{n}{set\PYZus{}zlabel}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{z (m)}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+    
+    \PY{c+c1}{\PYZsh{} Draw the box as a rectangular prism}
+    \PY{n}{draw\PYZus{}3d\PYZus{}box}\PY{p}{(}\PY{n}{ax}\PY{p}{,} \PY{n}{np}\PY{o}{.}\PY{n}{zeros}\PY{p}{(}\PY{l+m+mi}{3}\PY{p}{)}\PY{p}{,} \PY{n}{dimensions}\PY{p}{)}
+    
+    \PY{c+c1}{\PYZsh{} Limits}
+    \PY{n}{ax}\PY{o}{.}\PY{n}{set\PYZus{}xlim}\PY{p}{(}\PY{o}{\PYZhy{}}\PY{n}{padding}\PY{p}{,} \PY{n}{dimensions}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]} \PY{o}{+} \PY{n}{padding}\PY{p}{)}
+    \PY{n}{ax}\PY{o}{.}\PY{n}{set\PYZus{}ylim}\PY{p}{(}\PY{o}{\PYZhy{}}\PY{n}{padding}\PY{p}{,} \PY{n}{dimensions}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]} \PY{o}{+} \PY{n}{padding}\PY{p}{)}
+    \PY{n}{ax}\PY{o}{.}\PY{n}{set\PYZus{}zlim}\PY{p}{(}\PY{o}{\PYZhy{}}\PY{n}{padding}\PY{p}{,} \PY{n}{dimensions}\PY{p}{[}\PY{l+m+mi}{2}\PY{p}{]} \PY{o}{+} \PY{n}{padding}\PY{p}{)}
+    
+    \PY{k}{return} \PY{n}{save\PYZus{}graph\PYZus{}and\PYZus{}close}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \textbf{Code Block Summary:} (\texttt{simulate}) Performs a singular
+simulation given a maximal tree depth/number of generations, box
+dimensions \texttt{(w,h)}, and number of trees/initial neutrons.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{19}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{def} \PY{n+nf}{simulate}\PY{p}{(}\PY{n}{num\PYZus{}generations}\PY{p}{:} \PY{n+nb}{int}\PY{p}{,} \PY{n}{dimensions}\PY{p}{:} \PY{n+nb}{tuple}\PY{p}{[}\PY{n+nb}{float}\PY{p}{]}\PY{p}{,} 
+             \PY{n}{num\PYZus{}initial\PYZus{}neutrons}\PY{p}{:} \PY{n+nb}{int} \PY{o}{=} \PY{l+m+mi}{1}\PY{p}{,} \PY{n}{plot}\PY{p}{:} \PY{n+nb}{bool} \PY{o}{=} \PY{k+kc}{False}\PY{p}{)}\PY{p}{:}
+\PY{+w}{    }\PY{l+s+sd}{\PYZdq{}\PYZdq{}\PYZdq{}}
+\PY{l+s+sd}{    Performs a singular, complete simulation based on the conditions}
+\PY{l+s+sd}{    of num\PYZus{}generations (maximum tree depth), }
+\PY{l+s+sd}{       dimensions (size of the box), and }
+\PY{l+s+sd}{       num\PYZus{}initial\PYZus{}neutrons (the number of trees).}
+\PY{l+s+sd}{    \PYZdq{}\PYZdq{}\PYZdq{}}
+    \PY{n}{result\PYZus{}trees} \PY{o}{=} \PY{p}{[}\PY{n}{generate\PYZus{}tree}\PY{p}{(}\PY{n}{num\PYZus{}generations}\PY{p}{,} \PY{n}{dimensions}\PY{p}{)} \PYZbs{}
+                    \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{num\PYZus{}initial\PYZus{}neutrons}\PY{p}{)}\PY{p}{]}
+    
+    \PY{n}{graph}\PY{o}{=}\PY{k+kc}{None}
+    \PY{k}{if} \PY{n}{plot}\PY{p}{:}
+        \PY{n}{graph} \PY{o}{=} \PY{n}{plot\PYZus{}trajectories}\PY{p}{(}\PY{n}{result\PYZus{}trees}\PY{p}{,} \PY{n}{num\PYZus{}generations}\PY{p}{,} \PY{n}{dimensions}\PY{p}{)}
+    
+    \PY{k}{return} \PY{n}{SimulationResult}\PY{p}{(}
+        \PY{n}{trajectories\PYZus{}graph} \PY{o}{=} \PY{n}{graph}\PY{p}{,}
+        \PY{n}{result\PYZus{}trees}       \PY{o}{=} \PY{n}{result\PYZus{}trees}
+    \PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \hypertarget{test}{%
+\subsubsection{Test}\label{test}}
+
+    \textbf{Code Block Summary:} This is a test of the full simulation code
+up to this point given the conditions of exploring 3 generations
+(technically four, not counting the starting generation 0) for two
+starting neutrons given a rectangular prism box with a width 8 meters,
+length of 6 meters, and height of 10 meters.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{20}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{test} \PY{o}{=} \PY{n}{simulate}\PY{p}{(}
+    \PY{n}{num\PYZus{}generations}      \PY{o}{=} \PY{l+m+mi}{3}\PY{p}{,} 
+    \PY{n}{dimensions}           \PY{o}{=} \PY{p}{(}\PY{l+m+mi}{8}\PY{p}{,}\PY{l+m+mi}{6}\PY{p}{,}\PY{l+m+mi}{10}\PY{p}{)}\PY{p}{,} 
+    \PY{n}{num\PYZus{}initial\PYZus{}neutrons} \PY{o}{=} \PY{l+m+mi}{4}\PY{p}{,} 
+    \PY{n}{plot} \PY{o}{=} \PY{k+kc}{True}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    Then, this same information can be displayed using a 2-D graph as well:
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{21}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{display}\PY{p}{(}\PY{n}{test}\PY{o}{.}\PY{n}{trajectories\PYZus{}graph}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{Project 3_files/Project 3_46_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \textbf{Figure 1.} A plot of the Neutron trajectories given the initial
+conditions of 4 starting neutrons, an \(8 \times 6 \times 10\) meter
+box, and a maximal generation depth of 3. The mechanics of a singular
+simulation can be verified by observing the tree-like structure of the
+neutron paths. Each starting neutron produces a distinct tree of
+furthered neutrons, but neutrons that end beyond the limits of the box
+at any generation are untracked and all remaining trees are ended at the
+maximal generation.
+
+    \hypertarget{simulation-analysis}{%
+\subsection{Simulation Analysis}\label{simulation-analysis}}
+
+    \textbf{Code Block Summary:}
+(\texttt{get\_neutrons\_in\_each\_generation}) Calculates the total
+number of neutrons in each generation by using the previous traversal
+method \texttt{traverse\_tree} and building a histogram based on the
+generation index. Electrons that are lost are not considered in this
+count.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{22}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{def} \PY{n+nf}{get\PYZus{}neutrons\PYZus{}in\PYZus{}each\PYZus{}generation}\PY{p}{(}\PY{n}{tree}\PY{p}{:} \PY{n}{NeutronNode}\PY{p}{)} \PY{o}{\PYZhy{}}\PY{o}{\PYZgt{}} \PY{n}{np}\PY{o}{.}\PY{n}{array}\PY{p}{:}
+\PY{+w}{    }\PY{l+s+sd}{\PYZdq{}\PYZdq{}\PYZdq{}}
+\PY{l+s+sd}{    Counts the number of neutrons in each generation}
+\PY{l+s+sd}{    \PYZdq{}\PYZdq{}\PYZdq{}}
+    \PY{n}{counts} \PY{o}{=} \PY{p}{[}\PY{p}{]}
+
+    \PY{k}{for} \PY{n}{neutron}\PY{p}{,} \PY{n}{generation} \PY{o+ow}{in} \PY{n}{traverse\PYZus{}tree}\PY{p}{(}\PY{n}{tree}\PY{p}{)}\PY{p}{:}
+        \PY{k}{if} \PY{n+nb}{len}\PY{p}{(}\PY{n}{counts}\PY{p}{)} \PY{o}{\PYZlt{}}\PY{o}{=} \PY{n}{generation}\PY{p}{:}
+            \PY{n}{counts}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{l+m+mi}{0}\PY{p}{)}
+        \PY{k}{if} \PY{o+ow}{not} \PY{n}{neutron}\PY{o}{.}\PY{n}{lost}\PY{p}{:}
+            \PY{n}{counts}\PY{p}{[}\PY{n}{generation}\PY{p}{]} \PY{o}{+}\PY{o}{=} \PY{l+m+mi}{1}
+
+    \PY{k}{return} \PY{n}{np}\PY{o}{.}\PY{n}{array}\PY{p}{(}\PY{n}{counts}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \textbf{Code Block Summary:} (\texttt{calculate\_k\_values}) Calculates
+the replication factor \(k\) for each generation based on the list of
+neutrons in each generation for a given neutron tree using the formula
+\(k_{i} = \frac{n_{i}}{n_{i-1}}\) where \(n_i\) is the number of
+neutrons for generation \(i\).
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{23}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{def} \PY{n+nf}{calculate\PYZus{}k\PYZus{}values}\PY{p}{(}\PY{n}{tree}\PY{p}{:} \PY{n}{NeutronNode}\PY{p}{)}\PY{p}{:}
+\PY{+w}{    }\PY{l+s+sd}{\PYZdq{}\PYZdq{}\PYZdq{}}
+\PY{l+s+sd}{    From a neutron tree, return an array of k }
+\PY{l+s+sd}{    values (n\PYZus{}next / n\PYZus{}current) for each generation. }
+\PY{l+s+sd}{    \PYZdq{}\PYZdq{}\PYZdq{}}
+    \PY{n}{counts} \PY{o}{=} \PY{n}{get\PYZus{}neutrons\PYZus{}in\PYZus{}each\PYZus{}generation}\PY{p}{(}\PY{n}{tree}\PY{p}{)}
+    \PY{k}{return} \PY{n}{counts}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{:}\PY{p}{]} \PY{o}{/} \PY{n}{counts}\PY{p}{[}\PY{p}{:}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \textbf{Code Block Summary:} (\texttt{simulate\_all}) This code repeats
+a given simulation and calculates the mean, standard deviation, and
+standard error for \(k\) alongside a bar plot of \(k\) values for each
+generation obtained for given number of replications \texttt{m\_reps},
+and this graph can be used for validation against the produced \(k\)
+values based on Monte-Carlo expectations.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{24}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n+nd}{@dataclass}
+\PY{k}{class} \PY{n+nc}{GenerationData}\PY{p}{:}
+\PY{+w}{    }\PY{l+s+sd}{\PYZdq{}\PYZdq{}\PYZdq{}}
+\PY{l+s+sd}{    Helper structure for storing k value }
+\PY{l+s+sd}{    data and a histogram for each generation}
+\PY{l+s+sd}{    \PYZdq{}\PYZdq{}\PYZdq{}}
+    \PY{n}{k\PYZus{}values\PYZus{}raw}\PY{p}{:}  \PY{n}{np}\PY{o}{.}\PY{n}{array}   \PY{o}{=} \PY{k+kc}{None}
+    \PY{n}{k\PYZus{}mean}\PY{p}{:}        \PY{n}{np}\PY{o}{.}\PY{n}{float64} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{nan}
+    \PY{n}{k\PYZus{}std\PYZus{}dev}\PY{p}{:}     \PY{n}{np}\PY{o}{.}\PY{n}{float64} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{nan}
+    \PY{n}{k\PYZus{}std\PYZus{}err}\PY{p}{:}     \PY{n}{np}\PY{o}{.}\PY{n}{float64} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{nan}
+    \PY{n}{rel\PYZus{}k\PYZus{}std\PYZus{}err}\PY{p}{:} \PY{n}{np}\PY{o}{.}\PY{n}{float64} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{nan}
+    
+    \PY{n}{histogram}\PY{p}{:} \PY{n}{Image} \PY{o}{=} \PY{k+kc}{None}
+
+\PY{n+nd}{@dataclass}
+\PY{k}{class} \PY{n+nc}{MonteCarloResults}\PY{p}{:}
+    \PY{n}{generations}\PY{p}{:}     \PY{n+nb}{list}\PY{p}{[}\PY{n}{GenerationData}\PY{p}{]} \PY{o}{=} \PY{k+kc}{None}
+    \PY{n}{mean\PYZus{}k\PYZus{}values}\PY{p}{:}   \PY{n}{np}\PY{o}{.}\PY{n}{array} \PY{o}{=} \PY{k+kc}{None}
+    \PY{n}{k\PYZus{}value\PYZus{}uncerts}\PY{p}{:} \PY{n}{np}\PY{o}{.}\PY{n}{array} \PY{o}{=} \PY{k+kc}{None}
+    \PY{n}{k\PYZus{}value\PYZus{}plot}\PY{p}{:}    \PY{n}{Image}    \PY{o}{=} \PY{k+kc}{None}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{25}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{def} \PY{n+nf}{monte\PYZus{}carlo}\PY{p}{(}\PY{n}{dimensions}\PY{p}{:} \PY{n+nb}{list}\PY{p}{[}\PY{n+nb}{float}\PY{p}{]}\PY{p}{,} \PY{n}{num\PYZus{}initial\PYZus{}neutrons}\PY{p}{:} \PY{n+nb}{int}\PY{p}{,} 
+                \PY{n}{num\PYZus{}replications}\PY{p}{:} \PY{n+nb}{int}\PY{p}{,}   \PY{n}{max\PYZus{}generation}\PY{p}{:} \PY{n+nb}{int}\PY{p}{,} 
+                \PY{n}{plot}\PY{p}{:} \PY{n+nb}{bool} \PY{o}{=} \PY{k+kc}{False}\PY{p}{,}      \PY{n}{debug\PYZus{}print}\PY{p}{:} \PY{n+nb}{bool} \PY{o}{=} \PY{k+kc}{False}\PY{p}{)}\PY{p}{:}
+\PY{+w}{    }\PY{l+s+sd}{\PYZdq{}\PYZdq{}\PYZdq{}}
+\PY{l+s+sd}{    Performs a Monte Carlo simulation by repeating a simulation of}
+\PY{l+s+sd}{    a set of initial conditions (`dimensions`, `num\PYZus{}initial\PYZus{}neutrons`, }
+\PY{l+s+sd}{    `max\PYZus{}generation`) for `num\PYZus{}replications`.}
+\PY{l+s+sd}{    \PYZdq{}\PYZdq{}\PYZdq{}}
+    \PY{c+c1}{\PYZsh{} saves the data}
+    \PY{n}{generation\PYZus{}data} \PY{o}{=} \PY{p}{[}\PY{p}{[}\PY{p}{]} \PY{k}{for} \PY{n}{\PYZus{}} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{max\PYZus{}generation}\PY{p}{)}\PY{p}{]}
+    \PY{n}{start\PYZus{}time} \PY{o}{=} \PY{n}{time}\PY{o}{.}\PY{n}{time}\PY{p}{(}\PY{p}{)}
+    
+    \PY{c+c1}{\PYZsh{} index and interval for debugging}
+    \PY{n}{interval} \PY{o}{=} \PY{n+nb}{max}\PY{p}{(}\PY{n}{num\PYZus{}replications} \PY{o}{/}\PY{o}{/} \PY{l+m+mi}{10}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{)}
+    
+    \PY{c+c1}{\PYZsh{} repeats the simulation for `num\PYZus{}replications`}
+    \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{num\PYZus{}replications}\PY{p}{)}\PY{p}{:}
+        \PY{n}{simulation\PYZus{}result} \PY{o}{=} \PY{n}{simulate}\PY{p}{(}
+            \PY{n}{max\PYZus{}generation}\PY{p}{,} 
+            \PY{n}{dimensions}\PY{p}{,}   
+            \PY{n}{num\PYZus{}initial\PYZus{}neutrons}\PY{p}{,} 
+            \PY{n}{plot}\PY{o}{=}\PY{k+kc}{False}
+        \PY{p}{)}\PY{o}{.}\PY{n}{result\PYZus{}trees}
+        
+        \PY{c+c1}{\PYZsh{} then append the results for each tree}
+        \PY{k}{for} \PY{n}{tree} \PY{o+ow}{in} \PY{n}{simulation\PYZus{}result}\PY{p}{:}
+            \PY{n}{k\PYZus{}values} \PY{o}{=} \PY{n}{calculate\PYZus{}k\PYZus{}values}\PY{p}{(}\PY{n}{tree}\PY{p}{)}
+            \PY{k}{for} \PY{n}{j}\PY{p}{,} \PY{n}{k} \PY{o+ow}{in} \PY{n+nb}{enumerate}\PY{p}{(}\PY{n}{k\PYZus{}values}\PY{p}{)}\PY{p}{:}
+                \PY{n}{generation\PYZus{}data}\PY{p}{[}\PY{n}{j}\PY{p}{]}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{n}{k}\PY{p}{)}
+                
+        \PY{c+c1}{\PYZsh{} Debug Print}
+        \PY{k}{if} \PY{n}{debug\PYZus{}print} \PY{o+ow}{and} \PY{p}{(}\PY{n}{i}\PY{o}{+}\PY{l+m+mi}{1}\PY{p}{)} \PY{o}{\PYZpc{}} \PY{n}{interval} \PY{o}{==} \PY{l+m+mi}{0}\PY{p}{:}
+            \PY{n+nb}{print}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+si}{\PYZob{}}\PY{p}{(}\PY{p}{(}\PY{n}{i}\PY{o}{+}\PY{l+m+mi}{1}\PY{p}{)}\PY{+w}{ }\PY{o}{/}\PY{+w}{ }\PY{n}{num\PYZus{}replications}\PY{p}{)}\PY{+w}{ }\PY{o}{*}\PY{+w}{ }\PY{l+m+mi}{100}\PY{l+s+si}{:}\PY{l+s+s1}{.0f}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s1}{\PYZpc{} \PYZhy{} Replication }\PY{l+s+si}{\PYZob{}}\PY{n}{i}\PY{o}{+}\PY{l+m+mi}{1}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s1}{/}\PY{l+s+si}{\PYZob{}}\PY{n}{num\PYZus{}replications}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+
+    \PY{n}{results} \PY{o}{=} \PY{n}{MonteCarloResults}\PY{p}{(}\PY{p}{)}
+    \PY{n}{results}\PY{o}{.}\PY{n}{generations}     \PY{o}{=} \PY{p}{[}\PY{p}{]}
+    \PY{n}{results}\PY{o}{.}\PY{n}{mean\PYZus{}k\PYZus{}values}   \PY{o}{=} \PY{p}{[}\PY{p}{]}
+    \PY{n}{results}\PY{o}{.}\PY{n}{k\PYZus{}value\PYZus{}uncerts} \PY{o}{=} \PY{p}{[}\PY{p}{]}
+    
+    \PY{k}{for} \PY{n}{gen} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{generation\PYZus{}data}\PY{p}{)}\PY{p}{)}\PY{p}{:}
+        \PY{n}{data} \PY{o}{=} \PY{n}{GenerationData}\PY{p}{(}\PY{p}{)}
+        
+        \PY{n}{data}\PY{o}{.}\PY{n}{k\PYZus{}values\PYZus{}raw} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{array}\PY{p}{(}\PY{n}{generation\PYZus{}data}\PY{p}{[}\PY{n}{gen}\PY{p}{]}\PY{p}{)}
+        
+        \PY{k}{if} \PY{n}{data}\PY{o}{.}\PY{n}{k\PYZus{}values\PYZus{}raw}\PY{o}{.}\PY{n}{size} \PY{o}{\PYZgt{}} \PY{l+m+mi}{0}\PY{p}{:}
+            \PY{n}{data}\PY{o}{.}\PY{n}{k\PYZus{}mean}    \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{mean}\PY{p}{(}\PY{n}{data}\PY{o}{.}\PY{n}{k\PYZus{}values\PYZus{}raw}\PY{p}{)}
+            \PY{n}{data}\PY{o}{.}\PY{n}{k\PYZus{}std\PYZus{}dev} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{std}\PY{p}{(}\PY{n}{data}\PY{o}{.}\PY{n}{k\PYZus{}values\PYZus{}raw}\PY{p}{)}
+            \PY{n}{data}\PY{o}{.}\PY{n}{k\PYZus{}std\PYZus{}err} \PY{o}{=} \PY{n}{data}\PY{o}{.}\PY{n}{k\PYZus{}std\PYZus{}dev} \PY{o}{/} \PY{n}{np}\PY{o}{.}\PY{n}{sqrt}\PY{p}{(}\PY{n}{data}\PY{o}{.}\PY{n}{k\PYZus{}values\PYZus{}raw}\PY{o}{.}\PY{n}{size}\PY{p}{)}
+            \PY{n}{data}\PY{o}{.}\PY{n}{rel\PYZus{}k\PYZus{}std\PYZus{}err} \PY{o}{=} \PY{n}{data}\PY{o}{.}\PY{n}{k\PYZus{}std\PYZus{}err} \PY{o}{/} \PY{n}{data}\PY{o}{.}\PY{n}{k\PYZus{}mean} \PYZbs{}
+                \PY{k}{if} \PY{n}{data}\PY{o}{.}\PY{n}{k\PYZus{}mean} \PY{o}{\PYZgt{}} \PY{l+m+mi}{0} \PY{k}{else} \PY{l+m+mi}{0}
+            
+            \PY{n}{results}\PY{o}{.}\PY{n}{mean\PYZus{}k\PYZus{}values}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{n}{data}\PY{o}{.}\PY{n}{k\PYZus{}mean}\PY{p}{)}
+            \PY{n}{results}\PY{o}{.}\PY{n}{k\PYZus{}value\PYZus{}uncerts}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{n}{data}\PY{o}{.}\PY{n}{k\PYZus{}std\PYZus{}err}\PY{p}{)}
+        
+        \PY{k}{if} \PY{n}{plot}\PY{p}{:}
+            \PY{n}{plt}\PY{o}{.}\PY{n}{figure}\PY{p}{(}\PY{n}{figsize}\PY{o}{=}\PY{p}{(}\PY{l+m+mi}{6}\PY{p}{,} \PY{l+m+mi}{4}\PY{p}{)}\PY{p}{)}
+
+            \PY{c+c1}{\PYZsh{} Histogram}
+            \PY{n}{plt}\PY{o}{.}\PY{n}{hist}\PY{p}{(}
+                \PY{n}{data}\PY{o}{.}\PY{n}{k\PYZus{}values\PYZus{}raw}\PY{p}{,}
+                \PY{n}{bins}\PY{o}{=}\PY{l+m+mi}{10}\PY{p}{,}
+                \PY{n}{alpha}\PY{o}{=}\PY{l+m+mf}{0.6}\PY{p}{,}
+                \PY{n}{edgecolor}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{black}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,}
+                \PY{n}{color}\PY{o}{=}\PY{n}{plt}\PY{o}{.}\PY{n}{get\PYZus{}cmap}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{viridis}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}\PY{p}{(}\PY{n}{gen} \PY{o}{/} \PY{n+nb}{max}\PY{p}{(}\PY{l+m+mi}{1}\PY{p}{,} \PY{n}{max\PYZus{}generation}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{)}\PY{p}{)}
+            \PY{p}{)}
+
+            \PY{c+c1}{\PYZsh{} Vertical line for mean}
+            \PY{n}{plt}\PY{o}{.}\PY{n}{axvline}\PY{p}{(}\PY{n}{data}\PY{o}{.}\PY{n}{k\PYZus{}mean}\PY{p}{,} \PY{n}{color}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{red}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{linestyle}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{\PYZhy{}\PYZhy{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{linewidth}\PY{o}{=}\PY{l+m+mf}{1.5}\PY{p}{)}
+
+            \PY{c+c1}{\PYZsh{} Titles and labels}
+            \PY{n}{plt}\PY{o}{.}\PY{n}{title}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Generation }\PY{l+s+si}{\PYZob{}}\PY{n}{gen}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{ to }\PY{l+s+si}{\PYZob{}}\PY{n}{gen}\PY{o}{+}\PY{l+m+mi}{1}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+            \PY{n}{plt}\PY{o}{.}\PY{n}{xlabel}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{k value}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+            \PY{n}{plt}\PY{o}{.}\PY{n}{ylabel}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Frequency}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+            \PY{n}{plt}\PY{o}{.}\PY{n}{grid}\PY{p}{(}\PY{n}{alpha}\PY{o}{=}\PY{l+m+mf}{0.3}\PY{p}{)}
+
+            \PY{c+c1}{\PYZsh{} Text box with stats}
+            \PY{n}{plt}\PY{o}{.}\PY{n}{text}\PY{p}{(}
+                \PY{l+m+mf}{0.95}\PY{p}{,} \PY{l+m+mf}{0.95}\PY{p}{,}
+                \PY{l+s+sa}{f}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{\PYZdl{}}\PY{l+s+se}{\PYZbs{}\PYZbs{}}\PY{l+s+s2}{bar}\PY{l+s+se}{\PYZob{}\PYZob{}}\PY{l+s+s2}{k}\PY{l+s+se}{\PYZcb{}\PYZcb{}}\PY{l+s+s2}{\PYZdl{}=}\PY{l+s+si}{\PYZob{}}\PY{n}{data}\PY{o}{.}\PY{n}{k\PYZus{}mean}\PY{l+s+si}{:}\PY{l+s+s2}{.3f}\PY{l+s+si}{\PYZcb{}}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s2}{±}\PY{l+s+si}{\PYZob{}}\PY{n}{data}\PY{o}{.}\PY{n}{k\PYZus{}std\PYZus{}err}\PY{l+s+si}{:}\PY{l+s+s2}{.3f}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{ (stderr)}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s2}{σ=}\PY{l+s+si}{\PYZob{}}\PY{n}{data}\PY{o}{.}\PY{n}{k\PYZus{}std\PYZus{}dev}\PY{l+s+si}{:}\PY{l+s+s2}{.3f}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,}
+                \PY{n}{verticalalignment}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{top}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+                \PY{n}{horizontalalignment}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{right}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+                \PY{n}{transform}\PY{o}{=}\PY{n}{plt}\PY{o}{.}\PY{n}{gca}\PY{p}{(}\PY{p}{)}\PY{o}{.}\PY{n}{transAxes}\PY{p}{,}
+                \PY{n}{fontsize}\PY{o}{=}\PY{l+m+mi}{10}\PY{p}{,}
+                \PY{n}{bbox}\PY{o}{=}\PY{n+nb}{dict}\PY{p}{(}\PY{n}{facecolor}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{white}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{alpha}\PY{o}{=}\PY{l+m+mf}{0.6}\PY{p}{,} \PY{n}{edgecolor}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{gray}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+            \PY{p}{)}
+
+            \PY{n}{plt}\PY{o}{.}\PY{n}{tight\PYZus{}layout}\PY{p}{(}\PY{p}{)}
+            \PY{n}{data}\PY{o}{.}\PY{n}{histogram} \PY{o}{=} \PY{n}{save\PYZus{}graph\PYZus{}and\PYZus{}close}\PY{p}{(}\PY{p}{)}
+            
+        \PY{n}{results}\PY{o}{.}\PY{n}{generations}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{n}{data}\PY{p}{)}
+    
+    \PY{n}{results}\PY{o}{.}\PY{n}{mean\PYZus{}k\PYZus{}values}   \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{asarray}\PY{p}{(}\PY{n}{results}\PY{o}{.}\PY{n}{mean\PYZus{}k\PYZus{}values}\PY{p}{)}
+    \PY{n}{results}\PY{o}{.}\PY{n}{k\PYZus{}value\PYZus{}uncerts} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{asarray}\PY{p}{(}\PY{n}{results}\PY{o}{.}\PY{n}{k\PYZus{}value\PYZus{}uncerts}\PY{p}{)}
+    
+    \PY{k}{if} \PY{n}{plot}\PY{p}{:}
+        \PY{n}{plt}\PY{o}{.}\PY{n}{figure}\PY{p}{(}\PY{p}{)}
+        \PY{n}{plt}\PY{o}{.}\PY{n}{title}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Mean Replication Rate by Generation}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+        \PY{n}{plt}\PY{o}{.}\PY{n}{errorbar}\PY{p}{(}
+            \PY{n}{x}\PY{o}{=}\PY{n}{np}\PY{o}{.}\PY{n}{arange}\PY{p}{(}\PY{n}{results}\PY{o}{.}\PY{n}{mean\PYZus{}k\PYZus{}values}\PY{o}{.}\PY{n}{size}\PY{p}{)}\PY{p}{,}
+            \PY{n}{y}\PY{o}{=}\PY{n}{results}\PY{o}{.}\PY{n}{mean\PYZus{}k\PYZus{}values}\PY{p}{,} 
+            \PY{n}{yerr}\PY{o}{=}\PY{n}{results}\PY{o}{.}\PY{n}{k\PYZus{}value\PYZus{}uncerts}\PY{p}{,}
+            \PY{n}{fmt}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{bo\PYZhy{}\PYZhy{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+            \PY{n}{label}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{k}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+        \PY{n}{plt}\PY{o}{.}\PY{n}{xticks}\PY{p}{(}\PY{n}{np}\PY{o}{.}\PY{n}{arange}\PY{p}{(}\PY{n}{results}\PY{o}{.}\PY{n}{mean\PYZus{}k\PYZus{}values}\PY{o}{.}\PY{n}{size}\PY{p}{)}\PY{p}{)}
+        \PY{n}{plt}\PY{o}{.}\PY{n}{xlabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Generation}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+        \PY{n}{plt}\PY{o}{.}\PY{n}{ylabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Replication Rate}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+        \PY{n}{results}\PY{o}{.}\PY{n}{k\PYZus{}value\PYZus{}plot} \PY{o}{=} \PY{n}{save\PYZus{}graph\PYZus{}and\PYZus{}close}\PY{p}{(}\PY{p}{)}
+        
+    \PY{n}{end\PYZus{}time} \PY{o}{=} \PY{n}{time}\PY{o}{.}\PY{n}{time}\PY{p}{(}\PY{p}{)}
+    \PY{n}{elapsed\PYZus{}time} \PY{o}{=} \PY{n}{end\PYZus{}time} \PY{o}{\PYZhy{}} \PY{n}{start\PYZus{}time}
+    
+    \PY{k}{if} \PY{n}{debug\PYZus{}print}\PY{p}{:}
+        \PY{n+nb}{print}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Executed in }\PY{l+s+si}{\PYZob{}}\PY{n+nb}{int}\PY{p}{(}\PY{n}{elapsed\PYZus{}time}\PY{p}{)}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{ s }\PY{l+s+si}{\PYZob{}}\PY{n+nb}{int}\PY{p}{(}\PY{p}{(}\PY{n}{elapsed\PYZus{}time}\PY{+w}{ }\PY{o}{\PYZhy{}}\PY{+w}{ }\PY{n+nb}{int}\PY{p}{(}\PY{n}{elapsed\PYZus{}time}\PY{p}{)}\PY{p}{)}\PY{+w}{ }\PY{o}{*}\PY{+w}{ }\PY{l+m+mi}{1000}\PY{p}{)}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{ ms}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+    
+    \PY{k}{return} \PY{n}{results}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \hypertarget{example-monte-carlo-test}{%
+\subsection{Example Monte Carlo Test}\label{example-monte-carlo-test}}
+
+    \textbf{Code Block Summary:} This is an example Monte Carlo simulation
+for 3 generations (with a singular starting neutron), 250 initial
+neutrons, 300 replications, and a \(10 \times 10 \times 10\) box.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{26}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{example\PYZus{}mc\PYZus{}results} \PY{o}{=} \PY{n}{monte\PYZus{}carlo}\PY{p}{(}
+    \PY{n}{dimensions}            \PY{o}{=} \PY{p}{(}\PY{l+m+mi}{10}\PY{p}{,}\PY{l+m+mi}{10}\PY{p}{,}\PY{l+m+mi}{10}\PY{p}{)}\PY{p}{,} 
+    \PY{n}{num\PYZus{}initial\PYZus{}neutrons}  \PY{o}{=} \PY{l+m+mi}{250}\PY{p}{,} 
+    \PY{n}{num\PYZus{}replications}      \PY{o}{=} \PY{l+m+mi}{300}\PY{p}{,}
+    \PY{n}{max\PYZus{}generation}        \PY{o}{=} \PY{l+m+mi}{3}\PY{p}{,}
+    \PY{n}{plot}        \PY{o}{=} \PY{k+kc}{True}\PY{p}{,}
+    \PY{n}{debug\PYZus{}print} \PY{o}{=} \PY{k+kc}{True}
+\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+10\% - Replication 30/300
+20\% - Replication 60/300
+30\% - Replication 90/300
+40\% - Replication 120/300
+50\% - Replication 150/300
+60\% - Replication 180/300
+70\% - Replication 210/300
+80\% - Replication 240/300
+90\% - Replication 270/300
+100\% - Replication 300/300
+Executed in 9 s 439 ms
+    \end{Verbatim}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{27}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{display}\PY{p}{(}\PY{n}{example\PYZus{}mc\PYZus{}results}\PY{o}{.}\PY{n}{k\PYZus{}value\PYZus{}plot}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{Project 3_files/Project 3_59_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \textbf{Figure 2.} A clear upward trend in mean replication rate as a
+function of generation can be seen, and this seems counterintuitive at
+first, as initial Neutrons are statistically most likely to be toward
+the exact center of the box, so later Neutrons become more likely to
+spread outward radially (which implies the opposite trend). However,
+this trend of increase is likely the result of the mathematical spectrum
+of possible \(k\) values that can be produced at each neutron level. The
+first generation can only ever replicate 0, 1, or 2 neutrons exactly, so
+an individual neutron \(i\) will have exactly \(k_i = 0, 1, 2\): a
+discrete range. So, in short, because the range of possible \(k\) values
+for a given neutron is so limited, the negative contribution from low
+\(k\) values will be much higher.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{28}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{display}\PY{p}{(}\PY{n}{example\PYZus{}mc\PYZus{}results}\PY{o}{.}\PY{n}{generations}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{o}{.}\PY{n}{histogram}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{Project 3_files/Project 3_61_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \textbf{Figure 3.} The first generation will usually be able to
+multiplying into one or two more neutrons rather than producing none due
+to the nature of always having to start out within the box (and being
+more likely to begin closer to the middle than closer to the edge as a
+result).
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{29}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{display}\PY{p}{(}\PY{n}{example\PYZus{}mc\PYZus{}results}\PY{o}{.}\PY{n}{generations}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{o}{.}\PY{n}{histogram}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{Project 3_files/Project 3_63_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \textbf{Figure 4.} For the next generation, the \(k\)-values begin to
+spread out as the successive neutrons become more likely to be in a
+variety of places within the box. For example, the first neutron may be
+most likely to begin closer to the middle, but subsequent neutrons
+become more likely to become closer to the edges of the box. However,
+the mean \(k\) value is slowly increasing as compared to the first
+generation simply due to the number of total children that can possibly
+be generated in each successive generation increasing by
+\(2^n - 2^{n-1}\) for each generation \(n\), and furthermore, this also
+means that as the generations grow, the standard deviation \(\sigma\)
+should decrease due to the sheer number of neutrons making individual
+neutrons being lost have less effect on the overall \(k\) value.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{30}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{display}\PY{p}{(}\PY{n}{example\PYZus{}mc\PYZus{}results}\PY{o}{.}\PY{n}{generations}\PY{p}{[}\PY{l+m+mi}{2}\PY{p}{]}\PY{o}{.}\PY{n}{histogram}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{Project 3_files/Project 3_65_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \textbf{Figure 5.} The aforementioned pattern in Figure 3. is continued
+here, as the spread of \(k\) values continues to further out. As
+expected, \(k\) has increased and the standard deviation has decreased
+due to the sheer number of neutrons that exist at this generation.
+
+    \hypertarget{determining-the-minimal-replication-rate-m-for-producing-accurate-aggregate-multiplication-rates}{%
+\section{\texorpdfstring{Determining the Minimal Replication Rate \(m\)
+for Producing Accurate Aggregate Multiplication
+Rates}{Determining the Minimal Replication Rate m for Producing Accurate Aggregate Multiplication Rates}}\label{determining-the-minimal-replication-rate-m-for-producing-accurate-aggregate-multiplication-rates}}
+
+    Before we determine the generation depth to work with, it'll be
+extremely important to consider the minimum number of replications to
+use to have accurate \(k\)-values. The way we can do this is based on
+how the relative standard error (the standard error divided by the
+multiplication rate) of a system changes based on our number of
+replications, and in particular, we'll want the relative standard error
+at whatever generation ends up being our minimal stable generation to be
+reasonably low. To do this, we can just pick some generation depth
+(which I'll refer to as the `base' generation) that we know will be
+lower than minimal stable generation (as this should have a higher
+standard error) then pick a replication rate that minimizes the relative
+standard error for a case simulation.
+
+    \textbf{Side Note on the Number of Initial Neutrons:} Before determining
+the minimum-stable generation \(g\) or the mimimum-accurate number of
+replications \(m\), we need to set a number of initial neutrons to
+perform Monte-Carlo simulations with. It doesn't particularly matter
+what number we set this to, as the number of initial neutrons with which
+we perform the simulation with is exactly the same as performing that
+simulation for each initial neutron (so each additional starting neutron
+is like another replication anyway). This means that the total number of
+replications, in reality, can be looked at as being the number of
+replications \emph{multiplied by} the number of initial neutrons, so as
+we will determine later, we're actually really performing 25,000
+replications for each phase coordinate if we set the number of initial
+neutrons at 250, which I'll keep consistent for the rest of this
+investigation.
+
+    As a good base generation, let's just consider going as far as
+generation 5. Now, we'll want to pick a considerably nontrivial reactor
+geometry (more intuitively stable, so higher volumes and more even
+aspect ratios) and a trivial geometry to try and compare them.
+
+    To begin, let's consider a nearly-flat plane (\(R=30\)) with a small
+volume (\(V=1\)) as our unstable case:
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{31}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{min\PYZus{}rep\PYZus{}unstable\PYZus{}case} \PY{o}{=} \PY{n}{monte\PYZus{}carlo}\PY{p}{(}
+    \PY{n}{dimensions}            \PY{o}{=} \PY{n}{calculate\PYZus{}dimensions}\PY{p}{(}\PY{l+m+mi}{30}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{)}\PY{p}{,} 
+    \PY{n}{num\PYZus{}initial\PYZus{}neutrons}  \PY{o}{=} \PY{l+m+mi}{250}\PY{p}{,} 
+    \PY{n}{num\PYZus{}replications}      \PY{o}{=} \PY{l+m+mi}{100}\PY{p}{,}
+    \PY{n}{max\PYZus{}generation}        \PY{o}{=} \PY{l+m+mi}{5}\PY{p}{,}
+    \PY{n}{plot}                  \PY{o}{=} \PY{k+kc}{True}\PY{p}{,}
+    \PY{n}{debug\PYZus{}print}           \PY{o}{=} \PY{k+kc}{True}
+\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+10\% - Replication 10/100
+20\% - Replication 20/100
+30\% - Replication 30/100
+40\% - Replication 40/100
+50\% - Replication 50/100
+60\% - Replication 60/100
+70\% - Replication 70/100
+80\% - Replication 80/100
+90\% - Replication 90/100
+100\% - Replication 100/100
+Executed in 1 s 312 ms
+    \end{Verbatim}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{32}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{display}\PY{p}{(}\PY{n}{min\PYZus{}rep\PYZus{}unstable\PYZus{}case}\PY{o}{.}\PY{n}{k\PYZus{}value\PYZus{}plot}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{Project 3_files/Project 3_73_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \textbf{Figure 6.} The progression didn't even make it to 5 generations,
+so this geometry is trivially unstable, and there would be absolutely no
+uncertainty in the long-run \(k\)-value as being completely zero.
+
+    Now, let's consider a cube (\(R=1\)) with a large volume (\(V=2000\)
+\(m^3\)) as our stable case:
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{33}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{min\PYZus{}rep\PYZus{}stable\PYZus{}case} \PY{o}{=} \PY{n}{monte\PYZus{}carlo}\PY{p}{(}
+    \PY{n}{dimensions}            \PY{o}{=} \PY{n}{calculate\PYZus{}dimensions}\PY{p}{(}\PY{l+m+mi}{1}\PY{p}{,} \PY{l+m+mi}{2000}\PY{p}{)}\PY{p}{,} 
+    \PY{n}{num\PYZus{}initial\PYZus{}neutrons}  \PY{o}{=} \PY{l+m+mi}{250}\PY{p}{,} 
+    \PY{n}{num\PYZus{}replications}      \PY{o}{=} \PY{l+m+mi}{100}\PY{p}{,}
+    \PY{n}{max\PYZus{}generation}        \PY{o}{=} \PY{l+m+mi}{5}\PY{p}{,}
+    \PY{n}{plot}                  \PY{o}{=} \PY{k+kc}{True}\PY{p}{,}
+    \PY{n}{debug\PYZus{}print}           \PY{o}{=} \PY{k+kc}{True}
+\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+10\% - Replication 10/100
+20\% - Replication 20/100
+30\% - Replication 30/100
+40\% - Replication 40/100
+50\% - Replication 50/100
+60\% - Replication 60/100
+70\% - Replication 70/100
+80\% - Replication 80/100
+90\% - Replication 90/100
+100\% - Replication 100/100
+Executed in 9 s 927 ms
+    \end{Verbatim}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{34}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{display}\PY{p}{(}\PY{n}{min\PYZus{}rep\PYZus{}stable\PYZus{}case}\PY{o}{.}\PY{n}{k\PYZus{}value\PYZus{}plot}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{Project 3_files/Project 3_77_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \textbf{Figure 7.} The standard error does seem to decrease with the
+number of successive generations.
+
+Based off of this, we can calculate the relative standard error for the
+last generation, as the relative standard error for whatever our final
+generation should be should be longer:
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{35}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Relative Standard Error at Generation 4: }\PY{l+s+si}{\PYZob{}}\PY{n}{min\PYZus{}rep\PYZus{}stable\PYZus{}case}\PY{o}{.}\PY{n}{generations}\PY{p}{[}\PY{l+m+mi}{4}\PY{p}{]}\PY{o}{.}\PY{n}{rel\PYZus{}k\PYZus{}std\PYZus{}err}\PY{+w}{ }\PY{o}{*}\PY{+w}{ }\PY{l+m+mi}{100}\PY{l+s+si}{:}\PY{l+s+s1}{.1f}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s1}{\PYZpc{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Relative Standard Error at Generation 4: 0.2\%
+    \end{Verbatim}
+
+    As the relative standard error becomes about 0.2\%, we can reasonably
+say that it's small enough for the simulation to be accurate at a
+replication rate of 100, so we'll just use \(m=100\) replications for
+each point.
+
+    \hypertarget{determining-the-minimal-generation-depth-g-for-producing-stable-system-multiplication-rates}{%
+\section{\texorpdfstring{Determining the Minimal Generation Depth \(g\)
+for Producing Stable-System Multiplication
+Rates}{Determining the Minimal Generation Depth g for Producing Stable-System Multiplication Rates}}\label{determining-the-minimal-generation-depth-g-for-producing-stable-system-multiplication-rates}}
+
+    As stated previously, each box geometry \((R,V)\) should eventually
+converge to some characteristic long-run replication rate after
+performing a number of generations of replications, with the purposes of
+the programs utilized in this exploration to produce the mapping from a
+box geometry to its characteristic replication rate
+\[(R,V) \mapsto \overline{k}.\] However, the exact number of generations
+required to converge (or, for a physical interpretation, for the reactor
+to reach a stable state) isn't a well-defined or easily calculable
+value. What can be reasonably assumed, however, is that different box
+geometries should alter in how many generations they take to converge by
+a predictable pattern, and then we can leverage this pattern to
+determine which geometry in our intended phase space requires the
+longest generation depth to converge.
+
+    To begin, we can reasonably assume that trivially unstable systems
+should converge to a characteristic replication rate of \(k=0\), meaning
+that after some number of generations, the reaction stops completely (so
+the reactor is completely unstable). We can re-examine figures 6 and 7
+to aid in this: the trivially-unstable geometry quickly converges to a
+zero replication rate, whereas the stable geometry is unable continues
+to grow towards its stable replication rate over the course of the
+simulation. Therefore, we'll only focus on stable systems for
+determining the minimal generation depth for producing a stable long-run
+value across all of our phase space.
+
+In this simulation, I'm planning to explore a phase space of completely
+even aspect ratios at \(R=1\) to skewed, more flat aspect ratios at
+\(R=20\), and volumes from \(V=1\) \(m^3\) to \(200\) \(m^3\):
+\[D = \{ 1 \le R \le 20 \} \otimes \{ 1 \le V \le 200 \},\] so with this
+in mind, the most stable configuration should apriori be \(R=1,V=200\).
+We can use this, pick some large generation number, then observe its
+\(k\)-progression graph to pick a point at which it becomes roughly
+stable.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{36}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{min\PYZus{}gen\PYZus{}case} \PY{o}{=} \PY{n}{monte\PYZus{}carlo}\PY{p}{(}
+    \PY{n}{dimensions}            \PY{o}{=} \PY{n}{calculate\PYZus{}dimensions}\PY{p}{(}\PY{l+m+mi}{1}\PY{p}{,} \PY{l+m+mi}{200}\PY{p}{)}\PY{p}{,} 
+    \PY{n}{num\PYZus{}initial\PYZus{}neutrons}  \PY{o}{=} \PY{l+m+mi}{250}\PY{p}{,} 
+    \PY{n}{num\PYZus{}replications}      \PY{o}{=} \PY{l+m+mi}{100}\PY{p}{,}
+    \PY{n}{max\PYZus{}generation}        \PY{o}{=} \PY{l+m+mi}{25}\PY{p}{,}
+    \PY{n}{plot}                  \PY{o}{=} \PY{k+kc}{True}\PY{p}{,}
+    \PY{n}{debug\PYZus{}print}           \PY{o}{=} \PY{k+kc}{True}
+\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+10\% - Replication 10/100
+20\% - Replication 20/100
+30\% - Replication 30/100
+40\% - Replication 40/100
+50\% - Replication 50/100
+60\% - Replication 60/100
+70\% - Replication 70/100
+80\% - Replication 80/100
+90\% - Replication 90/100
+100\% - Replication 100/100
+Executed in 144 s 101 ms
+    \end{Verbatim}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{37}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{display}\PY{p}{(}\PY{n}{min\PYZus{}gen\PYZus{}case}\PY{o}{.}\PY{n}{k\PYZus{}value\PYZus{}plot}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{Project 3_files/Project 3_85_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \textbf{Figure 8.} It's difficult to exactly pinpoint where this system
+can be fully said to be stable, but we can be fairly confident that the
+system has reached long-term stability around generation 13 or 14, so to
+be absolutely sure, we can set the minimum-stable generation depth as
+\(g=15\).
+
+    \hypertarget{phase-investigation}{%
+\section{Phase Investigation}\label{phase-investigation}}
+
+    \textbf{Code Block Summary:} This is the actual phase investigation,
+which performs \texttt{monte\_carlo} for each of the box sizes produced
+given a domain of aspect ratios \((R_{min}, R_{max})\) and a domain of
+areas \((V_{min}, V_{max})\), alongside a number of starting neutrons,
+and number of replications per condition coordinate \((R,V)\).
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{38}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n+nd}{@dataclass}
+\PY{k}{class} \PY{n+nc}{ContourResults}\PY{p}{:}
+    \PY{n}{contour\PYZus{}plot}\PY{p}{:} \PY{n}{Image} \PY{o}{=} \PY{k+kc}{None}
+    \PY{n}{uncertainty\PYZus{}contour\PYZus{}plot}\PY{p}{:} \PY{n}{Image} \PY{o}{=} \PY{k+kc}{None}
+
+\PY{k}{def} \PY{n+nf}{generate\PYZus{}contour}\PY{p}{(}\PY{n}{aspect\PYZus{}ratio\PYZus{}range}\PY{p}{:} \PY{n+nb}{tuple}\PY{p}{,} \PY{n}{volume\PYZus{}range}\PY{p}{:} \PY{n+nb}{tuple}\PY{p}{,} \PY{n}{max\PYZus{}generation}\PY{p}{:} \PY{n+nb}{int} \PY{o}{=} \PY{l+m+mi}{3}\PY{p}{,}
+                     \PY{n}{num\PYZus{}initial\PYZus{}neutrons}\PY{p}{:} \PY{n+nb}{int} \PY{o}{=} \PY{l+m+mi}{1}\PY{p}{,} \PY{n}{num\PYZus{}replications}\PY{p}{:} \PY{n+nb}{int} \PY{o}{=} \PY{l+m+mi}{1}\PY{p}{,}
+                     \PY{n}{debug\PYZus{}print}\PY{p}{:} \PY{n+nb}{bool} \PY{o}{=} \PY{k+kc}{False}\PY{p}{)}\PY{p}{:}
+\PY{+w}{    }\PY{l+s+sd}{\PYZdq{}\PYZdq{}\PYZdq{}}
+\PY{l+s+sd}{    Explores the phase space of (R,V) and generates the overall contour for mean k across generations}
+\PY{l+s+sd}{    based on calling monte\PYZus{}carlo for each phase coordinate.}
+\PY{l+s+sd}{    \PYZdq{}\PYZdq{}\PYZdq{}}
+    \PY{n}{start\PYZus{}time} \PY{o}{=} \PY{n}{time}\PY{o}{.}\PY{n}{time}\PY{p}{(}\PY{p}{)}
+    
+    \PY{c+c1}{\PYZsh{} Store some of the parameters to explore the contour}
+    \PY{n}{contour\PYZus{}params} \PY{o}{=} \PY{p}{(}\PY{n}{max\PYZus{}generation}\PY{p}{,} \PY{n}{num\PYZus{}initial\PYZus{}neutrons}\PY{p}{,} \PY{n}{num\PYZus{}replications}\PY{p}{,} \PY{n}{aspect\PYZus{}ratio\PYZus{}range}\PY{p}{,} \PY{n}{volume\PYZus{}range}\PY{p}{)}
+    
+    \PY{c+c1}{\PYZsh{} Build the phase}
+    \PY{n}{aspect\PYZus{}ratio\PYZus{}domain} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{linspace}\PY{p}{(}\PY{o}{*}\PY{n}{aspect\PYZus{}ratio\PYZus{}range}\PY{p}{)}
+    \PY{n}{volume\PYZus{}domain} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{linspace}\PY{p}{(}\PY{o}{*}\PY{n}{volume\PYZus{}range}\PY{p}{)}
+    
+    \PY{n}{R}\PY{p}{,} \PY{n}{V} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{meshgrid}\PY{p}{(}\PY{n}{aspect\PYZus{}ratio\PYZus{}domain}\PY{p}{,} \PY{n}{volume\PYZus{}domain}\PY{p}{)}
+    \PY{n}{K} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{zeros}\PY{p}{(}\PY{p}{(}\PY{n}{aspect\PYZus{}ratio\PYZus{}domain}\PY{o}{.}\PY{n}{size}\PY{p}{,} \PY{n}{volume\PYZus{}domain}\PY{o}{.}\PY{n}{size}\PY{p}{)}\PY{p}{,} \PY{n}{dtype}\PY{o}{=}\PY{n+nb}{float}\PY{p}{)}
+    \PY{n}{K\PYZus{}uncert} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{zeros\PYZus{}like}\PY{p}{(}\PY{n}{K}\PY{p}{)}
+    \PY{n}{total\PYZus{}sims} \PY{o}{=} \PY{n}{aspect\PYZus{}ratio\PYZus{}domain}\PY{o}{.}\PY{n}{size} \PY{o}{*} \PY{n}{volume\PYZus{}domain}\PY{o}{.}\PY{n}{size}
+    
+    \PY{c+c1}{\PYZsh{} index and interval for debugging}
+    \PY{n}{idx} \PY{o}{=} \PY{l+m+mi}{0}
+    \PY{n}{interval} \PY{o}{=} \PY{n+nb}{max}\PY{p}{(}\PY{n}{total\PYZus{}sims} \PY{o}{/}\PY{o}{/} \PY{l+m+mi}{10}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{)}
+    
+    \PY{c+c1}{\PYZsh{} Iterate over the Phase}
+    \PY{k}{for} \PY{n}{i}\PY{p}{,} \PY{n}{aspect\PYZus{}ratio} \PY{o+ow}{in} \PY{n+nb}{enumerate}\PY{p}{(}\PY{n}{aspect\PYZus{}ratio\PYZus{}domain}\PY{p}{)}\PY{p}{:}
+        \PY{k}{for} \PY{n}{j}\PY{p}{,} \PY{n}{volume} \PY{o+ow}{in} \PY{n+nb}{enumerate}\PY{p}{(}\PY{n}{volume\PYZus{}domain}\PY{p}{)}\PY{p}{:}
+            \PY{n}{idx} \PY{o}{+}\PY{o}{=} \PY{l+m+mi}{1}
+            
+            \PY{n}{dimensions} \PY{o}{=} \PY{n}{calculate\PYZus{}dimensions}\PY{p}{(}\PY{n}{aspect\PYZus{}ratio}\PY{p}{,} \PY{n}{volume}\PY{p}{)}
+            \PY{n}{simulation} \PY{o}{=} \PY{n}{monte\PYZus{}carlo}\PY{p}{(}\PY{n}{dimensions}\PY{p}{,} \PY{n}{num\PYZus{}initial\PYZus{}neutrons}\PY{p}{,}
+                                     \PY{n}{num\PYZus{}replications}\PY{p}{,} \PY{n}{max\PYZus{}generation}\PY{p}{,} \PY{n}{plot}\PY{o}{=}\PY{k+kc}{False}\PY{p}{)}
+            
+            \PY{n}{K}\PY{p}{[}\PY{n}{j}\PY{p}{,}\PY{n}{i}\PY{p}{]} \PY{o}{=} \PY{n}{simulation}\PY{o}{.}\PY{n}{mean\PYZus{}k\PYZus{}values}\PY{p}{[}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]} \PY{k}{if} \PY{n}{simulation}\PY{o}{.}\PY{n}{mean\PYZus{}k\PYZus{}values}\PY{o}{.}\PY{n}{size} \PY{o}{\PYZgt{}} \PY{l+m+mi}{0} \PY{k}{else} \PY{l+m+mi}{0}
+            \PY{n}{K\PYZus{}uncert}\PY{p}{[}\PY{n}{j}\PY{p}{,}\PY{n}{i}\PY{p}{]} \PY{o}{=} \PY{n}{simulation}\PY{o}{.}\PY{n}{k\PYZus{}value\PYZus{}uncerts}\PY{p}{[}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]} \PY{k}{if} \PY{n}{simulation}\PY{o}{.}\PY{n}{k\PYZus{}value\PYZus{}uncerts}\PY{o}{.}\PY{n}{size} \PY{o}{\PYZgt{}} \PY{l+m+mi}{0} \PY{k}{else} \PY{l+m+mi}{0}
+            
+            \PY{c+c1}{\PYZsh{} Debug Print}
+            \PY{k}{if} \PY{n}{debug\PYZus{}print} \PY{o+ow}{and} \PY{n}{idx} \PY{o}{\PYZpc{}} \PY{n}{interval} \PY{o}{==} \PY{l+m+mi}{0}\PY{p}{:}
+                \PY{n+nb}{print}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+si}{\PYZob{}}\PY{p}{(}\PY{n}{idx}\PY{+w}{ }\PY{o}{/}\PY{+w}{ }\PY{n}{total\PYZus{}sims}\PY{p}{)}\PY{+w}{ }\PY{o}{*}\PY{+w}{ }\PY{l+m+mi}{100}\PY{l+s+si}{:}\PY{l+s+s1}{.0f}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s1}{\PYZpc{} \PYZhy{} Iteration }\PY{l+s+si}{\PYZob{}}\PY{n}{idx}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s1}{/}\PY{l+s+si}{\PYZob{}}\PY{n}{total\PYZus{}sims}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+    
+    \PY{c+c1}{\PYZsh{} Plotting}
+    \PY{n}{results} \PY{o}{=} \PY{n}{ContourResults}\PY{p}{(}\PY{p}{)}
+
+    \PY{c+c1}{\PYZsh{} Main Figure}
+    \PY{n}{plt}\PY{o}{.}\PY{n}{figure}\PY{p}{(}\PY{p}{)}
+    
+    \PY{n}{cp} \PY{o}{=} \PY{n}{plt}\PY{o}{.}\PY{n}{contourf}\PY{p}{(}\PY{n}{R}\PY{p}{,} \PY{n}{V}\PY{p}{,} \PY{n}{K}\PY{p}{,} \PY{n}{levels}\PY{o}{=}\PY{l+m+mi}{20}\PY{p}{,} \PY{n}{cmap}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{viridis}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+    \PY{n}{plt}\PY{o}{.}\PY{n}{xlabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Aspect Ratio \PYZdl{}w/h\PYZdl{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+    \PY{n}{plt}\PY{o}{.}\PY{n}{ylabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Volume (\PYZdl{}m\PYZca{}3\PYZdl{})}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+    \PY{n}{plt}\PY{o}{.}\PY{n}{title}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Generation }\PY{l+s+si}{\PYZob{}}\PY{n}{max\PYZus{}generation}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s1}{ to }\PY{l+s+si}{\PYZob{}}\PY{n}{max\PYZus{}generation}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s1}{: Mean \PYZdl{}k\PYZdl{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+    \PY{n}{plt}\PY{o}{.}\PY{n}{colorbar}\PY{p}{(}\PY{n}{cp}\PY{p}{,} \PY{n}{orientation}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{vertical}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{label}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Mean Multiplication Rate}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+    
+    \PY{n}{results}\PY{o}{.}\PY{n}{contour\PYZus{}plot} \PY{o}{=} \PY{n}{save\PYZus{}graph\PYZus{}and\PYZus{}close}\PY{p}{(}\PY{p}{)}
+    
+    \PY{c+c1}{\PYZsh{} Relative Uncertainty Plot}
+    \PY{n}{plt}\PY{o}{.}\PY{n}{figure}\PY{p}{(}\PY{p}{)}
+    
+    \PY{n}{cp} \PY{o}{=} \PY{n}{plt}\PY{o}{.}\PY{n}{contourf}\PY{p}{(}\PY{n}{R}\PY{p}{,} \PY{n}{V}\PY{p}{,} \PY{n}{K\PYZus{}uncert} \PY{o}{*} \PY{l+m+mi}{100}\PY{p}{,} \PY{n}{levels}\PY{o}{=}\PY{l+m+mi}{20}\PY{p}{,} \PY{n}{cmap}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{viridis}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+    \PY{n}{plt}\PY{o}{.}\PY{n}{xlabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Aspect Ratio \PYZdl{}w/h\PYZdl{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+    \PY{n}{plt}\PY{o}{.}\PY{n}{ylabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Volume (\PYZdl{}m\PYZca{}3\PYZdl{})}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+    \PY{n}{plt}\PY{o}{.}\PY{n}{title}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Generation }\PY{l+s+si}{\PYZob{}}\PY{n}{max\PYZus{}generation}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s1}{ to }\PY{l+s+si}{\PYZob{}}\PY{n}{max\PYZus{}generation}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s1}{: Relative Uncertainty}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+    \PY{n}{plt}\PY{o}{.}\PY{n}{colorbar}\PY{p}{(}\PY{n}{cp}\PY{p}{,} \PY{n}{orientation}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{vertical}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{label}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Relative Uncertainty Multiplication Rate (}\PY{l+s+s1}{\PYZpc{}}\PY{l+s+s1}{)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+    
+    \PY{n}{results}\PY{o}{.}\PY{n}{uncertainty\PYZus{}contour\PYZus{}plot} \PY{o}{=} \PY{n}{save\PYZus{}graph\PYZus{}and\PYZus{}close}\PY{p}{(}\PY{p}{)}
+    
+    \PY{n}{end\PYZus{}time} \PY{o}{=} \PY{n}{time}\PY{o}{.}\PY{n}{time}\PY{p}{(}\PY{p}{)}
+    \PY{n}{elapsed\PYZus{}time} \PY{o}{=} \PY{n}{end\PYZus{}time} \PY{o}{\PYZhy{}} \PY{n}{start\PYZus{}time}
+    
+    \PY{k}{if} \PY{n}{debug\PYZus{}print}\PY{p}{:}
+        \PY{n+nb}{print}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Executed in }\PY{l+s+si}{\PYZob{}}\PY{n+nb}{int}\PY{p}{(}\PY{n}{elapsed\PYZus{}time}\PY{p}{)}\PY{+w}{ }\PY{o}{/}\PY{o}{/}\PY{+w}{ }\PY{l+m+mi}{60}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{ m }\PY{l+s+si}{\PYZob{}}\PY{n+nb}{int}\PY{p}{(}\PY{n}{elapsed\PYZus{}time}\PY{p}{)}\PY{+w}{ }\PY{o}{\PYZpc{}}\PY{+w}{ }\PY{l+m+mi}{60}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{ s }\PY{l+s+si}{\PYZob{}}\PY{n+nb}{int}\PY{p}{(}\PY{p}{(}\PY{n}{elapsed\PYZus{}time}\PY{+w}{ }\PY{o}{\PYZhy{}}\PY{+w}{ }\PY{n+nb}{int}\PY{p}{(}\PY{n}{elapsed\PYZus{}time}\PY{p}{)}\PY{p}{)}\PY{+w}{ }\PY{o}{*}\PY{+w}{ }\PY{l+m+mi}{1000}\PY{p}{)}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{ ms}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+    
+    \PY{k}{return} \PY{n}{results}\PY{p}{,} \PY{n}{contour\PYZus{}params}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \textbf{Code Block Summary:} This is the exploration code for a range of
+10 aspect ratios from \(R=1\) to \(R=20\) and 10 areas from \(A=1\) to
+\(A=200\), given 250 starting neutrons, 100 replications, and 15
+generations. To lower the runtime, I'll only use a phase resolution of
+400 points, with 20 slices for each dimension.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{39}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{contour\PYZus{}results}\PY{p}{,} \PY{n}{contour\PYZus{}params} \PY{o}{=} \PY{n}{generate\PYZus{}contour}\PY{p}{(}
+    \PY{n}{aspect\PYZus{}ratio\PYZus{}range}   \PY{o}{=} \PY{p}{(}\PY{l+m+mi}{1}\PY{p}{,} \PY{l+m+mi}{20}\PY{p}{,}  \PY{l+m+mi}{20}\PY{p}{)}\PY{p}{,} 
+    \PY{n}{volume\PYZus{}range}         \PY{o}{=} \PY{p}{(}\PY{l+m+mi}{1}\PY{p}{,} \PY{l+m+mi}{200}\PY{p}{,} \PY{l+m+mi}{20}\PY{p}{)}\PY{p}{,}
+    \PY{n}{max\PYZus{}generation}       \PY{o}{=} \PY{l+m+mi}{15}\PY{p}{,}
+    \PY{n}{num\PYZus{}initial\PYZus{}neutrons} \PY{o}{=} \PY{l+m+mi}{250}\PY{p}{,} 
+    \PY{n}{num\PYZus{}replications}     \PY{o}{=} \PY{l+m+mi}{100}\PY{p}{,}
+    \PY{n}{debug\PYZus{}print}          \PY{o}{=} \PY{k+kc}{True}
+\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+10\% - Iteration 40/400
+20\% - Iteration 80/400
+30\% - Iteration 120/400
+40\% - Iteration 160/400
+50\% - Iteration 200/400
+60\% - Iteration 240/400
+70\% - Iteration 280/400
+80\% - Iteration 320/400
+90\% - Iteration 360/400
+100\% - Iteration 400/400
+Executed in 14 m 26 s 942 ms
+    \end{Verbatim}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{40}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{display}\PY{p}{(}\PY{n}{contour\PYZus{}results}\PY{o}{.}\PY{n}{contour\PYZus{}plot}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{Project 3_files/Project 3_92_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \textbf{Figure 9.} In terms of aspect ratio, the model clearly favors
+more cubic boxes around with aspect ratios of \(1:1\) or \(R=1\), and in
+terms of volume, higher volumes are much more favorable across the
+board. More skewed (unbalanced aspect ratios) and smaller volumes
+generally result in worse multiplication rates, with the worst
+multiplication rates (near 0, so no replications on average) are
+extremely skewed and very small boxes.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{41}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{display}\PY{p}{(}\PY{n}{contour\PYZus{}results}\PY{o}{.}\PY{n}{uncertainty\PYZus{}contour\PYZus{}plot}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{Project 3_files/Project 3_94_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \textbf{Figure 10.} The random bouts of high or low multiplication rates
+that can be observed in figure 9 are best explained by examining the
+regions of highest uncertainty. We're least certain of the
+validity/accuracy of the measurements made along the main positive
+diagonal of the graph (from the bottom left to the top right), and this
+coincides with the region in figure 9 which shows the most random
+behavior.
+
+    \hypertarget{phase-exploration-cross-sectional-analysis}{%
+\subsection{Phase Exploration: Cross-Sectional
+Analysis}\label{phase-exploration-cross-sectional-analysis}}
+
+    \textbf{Code Block Summary:} This code allows us to explore
+cross-sections of the phase to view patterns in how the multiplication
+rate changes with respect to a given parameter by holding the other
+parameters constant.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{42}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n+nd}{@dataclass}
+\PY{k}{class} \PY{n+nc}{CrossSectionData}\PY{p}{:}
+    \PY{n}{k\PYZus{}value\PYZus{}plot}\PY{p}{:} \PY{n}{Image} \PY{o}{=} \PY{k+kc}{None}
+
+\PY{k}{def} \PY{n+nf}{examine\PYZus{}cross\PYZus{}section}\PY{p}{(}\PY{n}{contour\PYZus{}params}\PY{p}{,} \PY{n}{aspect\PYZus{}ratio} \PY{o}{=} \PY{k+kc}{None}\PY{p}{,} \PY{n}{volume}\PY{o}{=}\PY{k+kc}{None}\PY{p}{,} \PY{n}{debug\PYZus{}print}\PY{o}{=}\PY{k+kc}{False}\PY{p}{)}\PY{p}{:}
+\PY{+w}{    }\PY{l+s+sd}{\PYZdq{}\PYZdq{}\PYZdq{}}
+\PY{l+s+sd}{    Performs the Monte\PYZhy{}Carlo simulation along a given cross\PYZhy{}section based on the parameter given.}
+\PY{l+s+sd}{    \PYZdq{}\PYZdq{}\PYZdq{}}
+    \PY{k}{if} \PY{n}{aspect\PYZus{}ratio} \PY{o+ow}{is} \PY{o+ow}{not} \PY{k+kc}{None} \PY{o+ow}{and} \PY{n}{volume} \PY{o+ow}{is} \PY{o+ow}{not} \PY{k+kc}{None}\PY{p}{:}
+        \PY{k}{raise} \PY{n+ne}{ValueError}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{At least one parameter must be unspecified!}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+    
+    \PY{n}{max\PYZus{}generation}\PY{p}{,} \PY{n}{num\PYZus{}initial\PYZus{}neutrons}\PY{p}{,} \PY{n}{num\PYZus{}replications}\PY{p}{,} \PY{n}{aspect\PYZus{}ratio\PYZus{}range}\PY{p}{,} \PY{n}{volume\PYZus{}range} \PY{o}{=} \PY{n}{contour\PYZus{}params}
+    
+    \PY{n}{start\PYZus{}time} \PY{o}{=} \PY{n}{time}\PY{o}{.}\PY{n}{time}\PY{p}{(}\PY{p}{)}
+    
+    \PY{n}{aspect\PYZus{}ratio\PYZus{}domain} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{linspace}\PY{p}{(}\PY{o}{*}\PY{n}{aspect\PYZus{}ratio\PYZus{}range}\PY{p}{)}
+    \PY{n}{volume\PYZus{}domain} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{linspace}\PY{p}{(}\PY{o}{*}\PY{n}{volume\PYZus{}range}\PY{p}{)}
+    
+    \PY{n}{x\PYZus{}label}  \PY{o}{=} \PY{k+kc}{None}
+    \PY{n}{x\PYZus{}values} \PY{o}{=} \PY{p}{[}\PY{p}{]}
+    
+    \PY{k}{if} \PY{n}{aspect\PYZus{}ratio} \PY{o+ow}{is} \PY{o+ow}{not} \PY{k+kc}{None}\PY{p}{:} \PY{c+c1}{\PYZsh{} Defined Aspect Ratio}
+        \PY{n}{aspect\PYZus{}ratio\PYZus{}domain} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{array}\PY{p}{(}\PY{p}{[}\PY{n}{aspect\PYZus{}ratio}\PY{p}{]}\PY{p}{)}
+        \PY{n}{x\PYZus{}label} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Volume}\PY{l+s+s1}{\PYZsq{}}
+    \PY{k}{else}\PY{p}{:}
+        \PY{n}{volume\PYZus{}domain} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{array}\PY{p}{(}\PY{p}{[}\PY{n}{volume}\PY{p}{]}\PY{p}{)}
+        \PY{n}{x\PYZus{}label} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Aspect Ratio}\PY{l+s+s1}{\PYZsq{}}
+    
+    \PY{n}{total\PYZus{}sims} \PY{o}{=} \PY{n}{aspect\PYZus{}ratio\PYZus{}domain}\PY{o}{.}\PY{n}{size} \PY{o}{*} \PY{n}{volume\PYZus{}domain}\PY{o}{.}\PY{n}{size}
+    
+    \PY{c+c1}{\PYZsh{} index and interval for debugging}
+    \PY{n}{idx} \PY{o}{=} \PY{l+m+mi}{0}
+    \PY{n}{interval} \PY{o}{=} \PY{n+nb}{max}\PY{p}{(}\PY{n}{total\PYZus{}sims} \PY{o}{/}\PY{o}{/} \PY{l+m+mi}{10}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{)}
+    
+    \PY{n}{k\PYZus{}values} \PY{o}{=} \PY{p}{[}\PY{p}{]}
+    \PY{n}{k\PYZus{}uncert} \PY{o}{=} \PY{p}{[}\PY{p}{]}
+    
+    \PY{c+c1}{\PYZsh{} Iterate over the Phase}
+    \PY{k}{for} \PY{n}{i}\PY{p}{,} \PY{n}{aspect\PYZus{}ratio\PYZus{}i} \PY{o+ow}{in} \PY{n+nb}{enumerate}\PY{p}{(}\PY{n}{aspect\PYZus{}ratio\PYZus{}domain}\PY{p}{)}\PY{p}{:}
+        \PY{k}{for} \PY{n}{j}\PY{p}{,} \PY{n}{volume\PYZus{}i} \PY{o+ow}{in} \PY{n+nb}{enumerate}\PY{p}{(}\PY{n}{volume\PYZus{}domain}\PY{p}{)}\PY{p}{:}
+            \PY{n}{idx} \PY{o}{+}\PY{o}{=} \PY{l+m+mi}{1}
+            
+            \PY{n}{dimensions} \PY{o}{=} \PY{n}{calculate\PYZus{}dimensions}\PY{p}{(}\PY{n}{aspect\PYZus{}ratio\PYZus{}i}\PY{p}{,} \PY{n}{volume\PYZus{}i}\PY{p}{)}
+            \PY{n}{simulation} \PY{o}{=} \PY{n}{monte\PYZus{}carlo}\PY{p}{(}\PY{n}{dimensions}\PY{p}{,} \PY{n}{num\PYZus{}initial\PYZus{}neutrons}\PY{p}{,}
+                                     \PY{n}{num\PYZus{}replications}\PY{p}{,} \PY{n}{max\PYZus{}generation}\PY{p}{,} \PY{n}{plot}\PY{o}{=}\PY{k+kc}{False}\PY{p}{)}
+            
+            \PY{k}{if} \PY{n}{aspect\PYZus{}ratio} \PY{o+ow}{is} \PY{o+ow}{not} \PY{k+kc}{None}\PY{p}{:}
+                \PY{n}{x\PYZus{}values}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{n}{volume\PYZus{}i}\PY{p}{)}
+            \PY{k}{else}\PY{p}{:}
+                \PY{n}{x\PYZus{}values}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{n}{aspect\PYZus{}ratio\PYZus{}i}\PY{p}{)}
+            
+            \PY{n}{k\PYZus{}values}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{n}{simulation}\PY{o}{.}\PY{n}{mean\PYZus{}k\PYZus{}values}\PY{p}{[}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{)}
+            \PY{n}{k\PYZus{}uncert}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{n}{simulation}\PY{o}{.}\PY{n}{k\PYZus{}value\PYZus{}uncerts}\PY{p}{[}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{)}
+            
+            \PY{c+c1}{\PYZsh{} Debug Print}
+            \PY{k}{if} \PY{n}{debug\PYZus{}print} \PY{o+ow}{and} \PY{n}{idx} \PY{o}{\PYZpc{}} \PY{n}{interval} \PY{o}{==} \PY{l+m+mi}{0}\PY{p}{:}
+                \PY{n+nb}{print}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+si}{\PYZob{}}\PY{p}{(}\PY{n}{idx}\PY{+w}{ }\PY{o}{/}\PY{+w}{ }\PY{n}{total\PYZus{}sims}\PY{p}{)}\PY{+w}{ }\PY{o}{*}\PY{+w}{ }\PY{l+m+mi}{100}\PY{l+s+si}{:}\PY{l+s+s1}{.0f}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s1}{\PYZpc{} \PYZhy{} Iteration }\PY{l+s+si}{\PYZob{}}\PY{n}{idx}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s1}{/}\PY{l+s+si}{\PYZob{}}\PY{n}{total\PYZus{}sims}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+              
+    \PY{n}{results} \PY{o}{=} \PY{n}{CrossSectionData}\PY{p}{(}\PY{p}{)}
+            
+    \PY{n}{plt}\PY{o}{.}\PY{n}{figure}\PY{p}{(}\PY{p}{)}
+    \PY{n}{plt}\PY{o}{.}\PY{n}{title}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Mean Replication Rate vs. }\PY{l+s+si}{\PYZob{}}\PY{n}{x\PYZus{}label}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+    \PY{n}{plt}\PY{o}{.}\PY{n}{errorbar}\PY{p}{(}
+        \PY{n}{x}\PY{o}{=}\PY{n}{x\PYZus{}values}\PY{p}{,}
+        \PY{n}{y}\PY{o}{=}\PY{n}{k\PYZus{}values}\PY{p}{,} 
+        \PY{n}{yerr}\PY{o}{=}\PY{n}{k\PYZus{}uncert}\PY{p}{,}
+        \PY{n}{fmt}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{bo\PYZhy{}\PYZhy{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+        \PY{n}{label}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{k}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+    \PY{n}{plt}\PY{o}{.}\PY{n}{xlabel}\PY{p}{(}\PY{n}{x\PYZus{}label}\PY{p}{)}
+    \PY{n}{plt}\PY{o}{.}\PY{n}{ylabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Mean Replication Rate}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+    \PY{n}{results}\PY{o}{.}\PY{n}{k\PYZus{}value\PYZus{}plot} \PY{o}{=} \PY{n}{save\PYZus{}graph\PYZus{}and\PYZus{}close}\PY{p}{(}\PY{p}{)}
+    
+    \PY{n}{end\PYZus{}time} \PY{o}{=} \PY{n}{time}\PY{o}{.}\PY{n}{time}\PY{p}{(}\PY{p}{)}
+    \PY{n}{elapsed\PYZus{}time} \PY{o}{=} \PY{n}{end\PYZus{}time} \PY{o}{\PYZhy{}} \PY{n}{start\PYZus{}time}
+    
+    \PY{k}{if} \PY{n}{debug\PYZus{}print}\PY{p}{:}
+        \PY{n+nb}{print}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Executed in }\PY{l+s+si}{\PYZob{}}\PY{n+nb}{int}\PY{p}{(}\PY{n}{elapsed\PYZus{}time}\PY{p}{)}\PY{+w}{ }\PY{o}{/}\PY{o}{/}\PY{+w}{ }\PY{l+m+mi}{60}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{ m }\PY{l+s+si}{\PYZob{}}\PY{n+nb}{int}\PY{p}{(}\PY{n}{elapsed\PYZus{}time}\PY{p}{)}\PY{+w}{ }\PY{o}{\PYZpc{}}\PY{+w}{ }\PY{l+m+mi}{60}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{ s }\PY{l+s+si}{\PYZob{}}\PY{n+nb}{int}\PY{p}{(}\PY{p}{(}\PY{n}{elapsed\PYZus{}time}\PY{+w}{ }\PY{o}{\PYZhy{}}\PY{+w}{ }\PY{n+nb}{int}\PY{p}{(}\PY{n}{elapsed\PYZus{}time}\PY{p}{)}\PY{p}{)}\PY{+w}{ }\PY{o}{*}\PY{+w}{ }\PY{l+m+mi}{1000}\PY{p}{)}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{ ms}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+    
+    \PY{k}{return} \PY{n}{results}
+\end{Verbatim}
+\end{tcolorbox}
+
+    In order to try and get a very good picture of the relationship between
+how each individual parameter alters the multiplication rate, we can
+utilize a few cross-sectional analyses to help us, in the form of
+visualizing
+\[f(R,V=V_0) \to \mathbf{k} \text{ or } f(R=R_0,V) \to \mathbf{k}.\] To
+begin, we'll consider just the volume, holding the aspect ratio constant
+at \(R_0=1\):
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{43}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{volume\PYZus{}cross\PYZus{}section} \PY{o}{=} \PY{n}{examine\PYZus{}cross\PYZus{}section}\PY{p}{(}\PY{n}{contour\PYZus{}params}\PY{p}{,} \PY{n}{aspect\PYZus{}ratio}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{,} \PY{n}{debug\PYZus{}print}\PY{o}{=}\PY{k+kc}{True}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+10\% - Iteration 2/20
+20\% - Iteration 4/20
+30\% - Iteration 6/20
+40\% - Iteration 8/20
+50\% - Iteration 10/20
+60\% - Iteration 12/20
+70\% - Iteration 14/20
+80\% - Iteration 16/20
+90\% - Iteration 18/20
+100\% - Iteration 20/20
+Executed in 3 m 18 s 937 ms
+    \end{Verbatim}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{44}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{display}\PY{p}{(}\PY{n}{volume\PYZus{}cross\PYZus{}section}\PY{o}{.}\PY{n}{k\PYZus{}value\PYZus{}plot}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{Project 3_files/Project 3_101_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \textbf{Figure 11.} For the most stable aspect ratio (cubic), there's a
+positive relation between the volume and the mean multiplication rate
+with diminishing returns (levels out as the volume increases). Notably,
+the uncertainty also decreases significantly as volume is increased.
+
+    Now, we can consider the aspect ratio, holding the volume constant at
+\(V_0=200\):
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{45}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{aspect\PYZus{}ratio\PYZus{}cross\PYZus{}section} \PY{o}{=} \PY{n}{examine\PYZus{}cross\PYZus{}section}\PY{p}{(}\PY{n}{contour\PYZus{}params}\PY{p}{,} \PY{n}{volume}\PY{o}{=}\PY{l+m+mi}{200}\PY{p}{,} \PY{n}{debug\PYZus{}print}\PY{o}{=}\PY{k+kc}{True}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+10\% - Iteration 2/20
+20\% - Iteration 4/20
+30\% - Iteration 6/20
+40\% - Iteration 8/20
+50\% - Iteration 10/20
+60\% - Iteration 12/20
+70\% - Iteration 14/20
+80\% - Iteration 16/20
+90\% - Iteration 18/20
+100\% - Iteration 20/20
+Executed in 1 m 34 s 825 ms
+    \end{Verbatim}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{46}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{display}\PY{p}{(}\PY{n}{aspect\PYZus{}ratio\PYZus{}cross\PYZus{}section}\PY{o}{.}\PY{n}{k\PYZus{}value\PYZus{}plot}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{Project 3_files/Project 3_105_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \textbf{Figure 12.} As the aspect ratio is increased from an even ratio
+(cubic, most stable) to a highly skewed ratio, the mean multiplication
+rate decreases and the uncertainty greatly increases.
+
+    \hypertarget{phase-exploration-edge-cases}{%
+\subsection{Phase Exploration: Edge
+Cases}\label{phase-exploration-edge-cases}}
+
+    \textbf{Code Block Summary:} This code will allow us to explore the
+phase by selecting individual coordinates, and that way, we can
+understand the results we are seeing. It works by taking the parameters
+we selected for our contour previously and performing the simulation for
+given coordinates \((R,V)\), and it returns an example simulation result
+alongside a full Monte Carlo simulation at that coordinate.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{47}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n+nd}{@dataclass}
+\PY{k}{class} \PY{n+nc}{PhaseCoordinateData}\PY{p}{:}
+    \PY{n}{example\PYZus{}simulation}\PY{p}{:} \PY{n}{SimulationResult}
+    \PY{n}{monte\PYZus{}carlo\PYZus{}result}\PY{p}{:} \PY{n+nb}{list}\PY{p}{[}\PY{n}{GenerationData}\PY{p}{]}
+
+\PY{k}{def} \PY{n+nf}{examine\PYZus{}contour\PYZus{}coordinate}\PY{p}{(}\PY{n}{aspect\PYZus{}ratio}\PY{p}{,} \PY{n}{area}\PY{p}{,} \PY{n}{contour\PYZus{}params}\PY{p}{)}\PY{p}{:}
+\PY{+w}{    }\PY{l+s+sd}{\PYZdq{}\PYZdq{}\PYZdq{}}
+\PY{l+s+sd}{    Performs the Monte\PYZhy{}Carlo simulation for a phase coordinate}
+\PY{l+s+sd}{    (R,V) over again, and also provides an example simulation}
+\PY{l+s+sd}{    alongside the Monte\PYZhy{}Carlo results so that we can observe}
+\PY{l+s+sd}{    what is going on at a certain coordinate.}
+\PY{l+s+sd}{    \PYZdq{}\PYZdq{}\PYZdq{}}
+    \PY{n}{max\PYZus{}generation}\PY{p}{,} \PY{n}{num\PYZus{}initial\PYZus{}neutrons}\PY{p}{,} \PY{n}{num\PYZus{}replications}\PY{p}{,} \PY{n}{\PYZus{}}\PY{p}{,} \PY{n}{\PYZus{}} \PY{o}{=} \PY{n}{contour\PYZus{}params}
+    \PY{n}{dimensions} \PY{o}{=} \PY{n}{calculate\PYZus{}dimensions}\PY{p}{(}\PY{n}{aspect\PYZus{}ratio}\PY{p}{,} \PY{n}{area}\PY{p}{)}
+    \PY{n}{example\PYZus{}simulation} \PY{o}{=} \PY{n}{simulate}\PY{p}{(}\PY{l+m+mi}{5}\PY{p}{,} \PY{n}{dimensions}\PY{p}{,} \PY{l+m+mi}{5}\PY{p}{,} \PY{n}{plot} \PY{o}{=} \PY{k+kc}{True}\PY{p}{)}
+    
+    \PY{c+c1}{\PYZsh{} num\PYZus{}replications can be doubled to make this Monte\PYZhy{}Carlo simulation more accurate}
+    \PY{n}{monte\PYZus{}carlo\PYZus{}result} \PY{o}{=} \PY{n}{monte\PYZus{}carlo}\PY{p}{(}\PY{n}{dimensions}\PY{p}{,} \PY{n}{num\PYZus{}initial\PYZus{}neutrons}\PY{p}{,} \PY{n}{num\PYZus{}replications} \PY{o}{*} \PY{l+m+mi}{2}\PY{p}{,} \PY{n}{max\PYZus{}generation}\PY{p}{,} \PY{n}{plot}\PY{o}{=}\PY{k+kc}{True}\PY{p}{)}
+    
+    \PY{k}{return} \PY{n}{PhaseCoordinateData}\PY{p}{(}\PY{n}{example\PYZus{}simulation}\PY{p}{,} \PY{n}{monte\PYZus{}carlo\PYZus{}result}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \hypertarget{edge-case-1-symmetric-aspect-ratio-large-volume-rv-1-200}{%
+\subsubsection{\texorpdfstring{Edge Case 1: Symmetric Aspect Ratio,
+Large Volume:
+\((R,V) = (1, 200)\)}{Edge Case 1: Symmetric Aspect Ratio, Large Volume: (R,V) = (1, 200)}}\label{edge-case-1-symmetric-aspect-ratio-large-volume-rv-1-200}}
+
+    \textbf{Code Block Summary:} Now, we can explore the phase a bit to
+understand what is going on in the contour, and why it seems to favor
+wide boxes over tall boxes. We can begin with a phase coordinate that is
+clearly more representative of more stable geometry:
+\((R,V) \approx (1, 200)\)
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{48}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{edge\PYZus{}case\PYZus{}1} \PY{o}{=} \PY{n}{examine\PYZus{}contour\PYZus{}coordinate}\PY{p}{(}\PY{l+m+mi}{1}\PY{p}{,} \PY{l+m+mi}{200}\PY{p}{,} \PY{n}{contour\PYZus{}params}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{49}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{display}\PY{p}{(}\PY{n}{edge\PYZus{}case\PYZus{}1}\PY{o}{.}\PY{n}{example\PYZus{}simulation}\PY{o}{.}\PY{n}{trajectories\PYZus{}graph}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{Project 3_files/Project 3_113_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \textbf{Figure 13.} The sheer density and variety in color of the inside
+of this box shows that this model is capable of producing many neutrons
+across all tracked generations, so without a doubt, this simulation was
+extremely deep-reaching.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{50}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{display}\PY{p}{(}\PY{n}{edge\PYZus{}case\PYZus{}1}\PY{o}{.}\PY{n}{monte\PYZus{}carlo\PYZus{}result}\PY{o}{.}\PY{n}{k\PYZus{}value\PYZus{}plot}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{Project 3_files/Project 3_115_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \textbf{Figure 14.} Here, we can see that the multiplication rate, once
+again, trends towards a stable, nonzero value. In particular, the
+multiplication rate is near but above \(k=1\), so a physical
+interpretation is that the number of free neutrons within the reactor is
+increasing with respect to the number being lost, making this reactor
+supercritical.
+
+    \hypertarget{edge-case-2-skewed-aspect-ratio-and-small-volume-rv201}{%
+\subsubsection{\texorpdfstring{Edge Case 2: Skewed Aspect Ratio and
+Small Volume:
+\((R,V)=(20,1)\)}{Edge Case 2: Skewed Aspect Ratio and Small Volume: (R,V)=(20,1)}}\label{edge-case-2-skewed-aspect-ratio-and-small-volume-rv201}}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{51}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{edge\PYZus{}case\PYZus{}2} \PY{o}{=} \PY{n}{examine\PYZus{}contour\PYZus{}coordinate}\PY{p}{(}\PY{l+m+mi}{20}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{,} \PY{n}{contour\PYZus{}params}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{52}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{display}\PY{p}{(}\PY{n}{edge\PYZus{}case\PYZus{}2}\PY{o}{.}\PY{n}{example\PYZus{}simulation}\PY{o}{.}\PY{n}{trajectories\PYZus{}graph}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{Project 3_files/Project 3_119_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \textbf{Figure 15.} Here we can see that all of the neutrons in the
+starting generation were lost. This geometry is clearly unstable as the
+extremely small height caused all neutrons propagating vertically in any
+large way to be completely ejected from the box, and the simulation
+didn't progress past the very first generation.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{53}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{display}\PY{p}{(}\PY{n}{edge\PYZus{}case\PYZus{}2}\PY{o}{.}\PY{n}{monte\PYZus{}carlo\PYZus{}result}\PY{o}{.}\PY{n}{k\PYZus{}value\PYZus{}plot}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{Project 3_files/Project 3_121_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \textbf{Figure 16.} Again, as expected, this geometry was so unstable
+that its multiplication rate trends to zero quickly, so the physical
+interpretation from this is that this reactor geometry is subcritical.
+
+    \hypertarget{edge-case-2-medium-skewed-aspect-ratio-and-medium-sized-volume-center-of-the-phase-domain-rv10100-and-rrv17.5175}{%
+\subsubsection{\texorpdfstring{Edge Case 2: Medium-Skewed Aspect Ratio
+and Medium-Sized Volume (Center of the Phase Domain): \((R,V)=(10,100)\)
+and
+\(R(R,V)=(17.5,175)\)}{Edge Case 2: Medium-Skewed Aspect Ratio and Medium-Sized Volume (Center of the Phase Domain): (R,V)=(10,100) and R(R,V)=(17.5,175)}}\label{edge-case-2-medium-skewed-aspect-ratio-and-medium-sized-volume-center-of-the-phase-domain-rv10100-and-rrv17.5175}}
+
+    Lastly, to try and understand what is going on along the region of high
+uncertainty, we can consider two points along the line \(V=10R\):
+\((10,100)\) and \((17.5,175)\). First, we can consider \((10,100)\):
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{54}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{edge\PYZus{}case\PYZus{}3} \PY{o}{=} \PY{n}{examine\PYZus{}contour\PYZus{}coordinate}\PY{p}{(}\PY{l+m+mi}{10}\PY{p}{,} \PY{l+m+mi}{100}\PY{p}{,} \PY{n}{contour\PYZus{}params}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{55}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{display}\PY{p}{(}\PY{n}{edge\PYZus{}case\PYZus{}3}\PY{o}{.}\PY{n}{monte\PYZus{}carlo\PYZus{}result}\PY{o}{.}\PY{n}{k\PYZus{}value\PYZus{}plot}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{Project 3_files/Project 3_126_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \textbf{Figure 17.} So, oddly, higher generation counts actually
+increase the uncertainty in the mean \(k\) value at this point without
+obviously trending towards zero, which is the opposite of the trend seen
+for the most stable geometry (large cubes).
+
+    Now, we can repeat this with \((17.5,175)\) to see if this is a
+consistent pattern:
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{56}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{edge\PYZus{}case\PYZus{}4} \PY{o}{=} \PY{n}{examine\PYZus{}contour\PYZus{}coordinate}\PY{p}{(}\PY{l+m+mf}{17.5}\PY{p}{,} \PY{l+m+mi}{175}\PY{p}{,} \PY{n}{contour\PYZus{}params}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{57}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{display}\PY{p}{(}\PY{n}{edge\PYZus{}case\PYZus{}4}\PY{o}{.}\PY{n}{monte\PYZus{}carlo\PYZus{}result}\PY{o}{.}\PY{n}{k\PYZus{}value\PYZus{}plot}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{Project 3_files/Project 3_130_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \textbf{Figure 18.} Again, we see the same trend: the uncertainty
+multiplication rate actually increases with respect to the generation
+for these points, and no obvious trend can be seen in the progression
+pattern for these points (so the \(k\) value obtained from them can be
+effectively said to be random). This begs the question of if the
+geometries along this line converge to a specific long-run
+multiplication rate whatsoever (which, if false, would counteract the
+main assumption of this previous investigation), but seeing as the
+considerations of this experiment are largely only focused on the trends
+observed along trivial cross-sections for even aspect ratios or large
+volumes rather than this section, further investigation into this region
+can be left for future exploration.
+
+    \hypertarget{summary-of-findings}{%
+\subsection{Summary of Findings}\label{summary-of-findings}}
+
+    \hypertarget{conclusions}{%
+\subsubsection{Conclusions}\label{conclusions}}
+
+    Altogether, there is a clear preference in stable multiplication rates
+for even aspect ratios and larger volumes. Higher skew (aspect ratio
+\(R\)) and lower volumes decrease the multiplication rate, whereas lower
+skews and higher volumes increase the multiplication rate. For both
+cases, however, very stable systems or very unstable systems both trend
+to extremely certain measurements, and the uncertainty in the
+measurement is maximal for geometries that are only somewhat skewed and
+somewhat large in the middle of the phase (more ``traditionally''
+rectangular geometries).
+
+    \hypertarget{limitations}{%
+\subsubsection{Limitations}\label{limitations}}
+
+    \begin{itemize}
+\tightlist
+\item
+  This model doesn't consider length dependence whatsoever, and length
+  is produced as a calculation between the width and height in order to
+  keep the aspect-ratio 2-dimensional (and similarly, having a
+  2-dimensional contour).
+\item
+  We assume that these reactors are able to approach long-term stability
+  whatsoever, and that the trends we've pinpointed for determining the
+  minimal-stable generational depth are thorough enough to accurately
+  determine the stable multiplication rate for each reactor geometry.
+  This exploration wasn't thoroughly considered for the points along the
+  positive diagonal that result in seemingly unpredictable behavior,
+  which questions if this assumption is truly correct.
+\item
+  Only rectangular reactor geometries were considered, but in the real
+  world, reactors are generally produced in cylindrical or spherical
+  shapes.
+\end{itemize}
+
+    \hypertarget{future-work}{%
+\subsubsection{Future Work}\label{future-work}}
+
+    This research begets the following questions:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  How do the progression patterns in multiplication rate change for
+  non-rectangular geometries, like spheres, cylinders, or polyhedrons?
+\item
+  What characteristics can be seen in the progression in multiplication
+  rate for the maximally-uncertain geometries along the positive main
+  diagonal of the contour?
+\end{enumerate}
+
+    \hypertarget{bibliography}{%
+\subsection{Bibliography}\label{bibliography}}
+
+    \begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  https://docs.python.org/3/library/dataclasses.html
+\item
+  https://docs.python.org/3/library/collections.html\#collections.deque
+\item
+  https://pypi.org/project/pillow/
+\item
+  https://docs.python.org/3/library/io.html
+\item
+  https://cs110.students.cs.ubc.ca/reference/design-recipes.html\#GenRec
+\item
+  https://docs.python.org/3/library/itertools.html
+\item
+  https://matplotlib.org/3.3.3/api/\_as\_gen/mpl\_toolkits.mplot3d.axes3d.Axes3D.html
+\end{enumerate}
+
+    \hypertarget{appendix}{%
+\section{Appendix}\label{appendix}}
+
+    \hypertarget{a.-validation-tasks}{%
+\subsection{A. Validation Tasks}\label{a.-validation-tasks}}
+
+    \hypertarget{a-1-situational-intuition}{%
+\subsubsection{A-1 Situational
+Intuition}\label{a-1-situational-intuition}}
+
+    Certain basic principles should apriori be true, and we can use this
+intuition to help us validate the results of this simulation. For
+example, an ``infinite sized'' box should lose absolutely no neutrons.
+We obviously cannot make an infinite box, but we can make a box much,
+much larger than the mean-free-path of a neutron.
+
+A cubic box with a volume of, say, \(10^{10}\) \(m^3\) volume should do
+the trick, and to keep the simulation simple, we can just model 8
+generations (as every neutron will be modeled, so we want to keep this
+low such that we don't have to do too many computations). Then, we can
+just measure the number of neutrons that remain at the end, and if it is
+exactly \(2^8\), then we know that the simulation works:
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{69}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{validation\PYZus{}1} \PY{o}{=} \PY{n}{simulate}\PY{p}{(}
+    \PY{n}{num\PYZus{}generations}      \PY{o}{=} \PY{l+m+mi}{8}\PY{p}{,} 
+    \PY{n}{dimensions}           \PY{o}{=} \PY{n}{calculate\PYZus{}dimensions}\PY{p}{(}\PY{l+m+mi}{1}\PY{p}{,}\PY{l+m+mf}{1e6}\PY{p}{)}\PY{p}{,} 
+    \PY{n}{num\PYZus{}initial\PYZus{}neutrons} \PY{o}{=} \PY{l+m+mi}{1}\PY{p}{,} 
+    \PY{n}{plot} \PY{o}{=} \PY{k+kc}{False}
+\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{70}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{valid\PYZus{}1\PYZus{}neutrons} \PY{o}{=} \PY{n}{get\PYZus{}neutrons\PYZus{}in\PYZus{}each\PYZus{}generation}\PY{p}{(}\PY{n}{validation\PYZus{}1}\PY{o}{.}\PY{n}{result\PYZus{}trees}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Neutron Count by Generation: }\PY{l+s+si}{\PYZob{}}\PY{n}{valid\PYZus{}1\PYZus{}neutrons}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Base 2 Logarithm of Neutrons in Generation 8: }\PY{l+s+si}{\PYZob{}}\PY{n}{np}\PY{o}{.}\PY{n}{log2}\PY{p}{(}\PY{n}{valid\PYZus{}1\PYZus{}neutrons}\PY{p}{[}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{)}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Neutron Count by Generation: [  1   2   4   8  16  32  64 128 256]
+Base 2 Logarithm of Neutrons in Generation 8: 8.0
+    \end{Verbatim}
+
+    So, therefore, we know that no neutrons were lost over the course of the
+simulation, so this absolutely worked. We can now try the next case,
+where we have a box that with a volume that is approximately zero. This
+should lose all of its neutrons absolutely, and shouldn't even progress
+past the first generation. For this simulation, we can approximate this
+by using a volume that is very close to zero but nonzero, like
+\(V=10^{-6}\) \(m^3\):
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{71}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{validation\PYZus{}2} \PY{o}{=} \PY{n}{simulate}\PY{p}{(}
+    \PY{n}{num\PYZus{}generations}      \PY{o}{=} \PY{l+m+mi}{8}\PY{p}{,} 
+    \PY{n}{dimensions}           \PY{o}{=} \PY{n}{calculate\PYZus{}dimensions}\PY{p}{(}\PY{l+m+mi}{1}\PY{p}{,}\PY{l+m+mf}{1e\PYZhy{}6}\PY{p}{)}\PY{p}{,} 
+    \PY{n}{num\PYZus{}initial\PYZus{}neutrons} \PY{o}{=} \PY{l+m+mi}{1}\PY{p}{,} 
+    \PY{n}{plot} \PY{o}{=} \PY{k+kc}{False}
+\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{72}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{valid\PYZus{}2\PYZus{}neutrons} \PY{o}{=} \PY{n}{get\PYZus{}neutrons\PYZus{}in\PYZus{}each\PYZus{}generation}\PY{p}{(}\PY{n}{validation\PYZus{}2}\PY{o}{.}\PY{n}{result\PYZus{}trees}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Neutron Count by Generation: }\PY{l+s+si}{\PYZob{}}\PY{n}{valid\PYZus{}2\PYZus{}neutrons}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Neutron Count by Generation: [0]
+    \end{Verbatim}
+
+    As we can see, the simulation entirely doesn't progress. The first,
+starting neutron isn't even counted as being successfully within the box
+as it immediately exits the box on its first movement.
+
+    Further, we also know that the same behavior of the neutrons being
+immediately lost should occur for any velocity with infinitesimal width
+(infinitely skewed ratio, or \(R \to \infty\)). We can test this,
+similarly, by pairing \(R=10^{6}\) with \(V=10^{6}\):
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{73}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{validation\PYZus{}3} \PY{o}{=} \PY{n}{simulate}\PY{p}{(}
+    \PY{n}{num\PYZus{}generations}      \PY{o}{=} \PY{l+m+mi}{8}\PY{p}{,} 
+    \PY{n}{dimensions}           \PY{o}{=} \PY{n}{calculate\PYZus{}dimensions}\PY{p}{(}\PY{l+m+mf}{1e6}\PY{p}{,}\PY{l+m+mf}{1e6}\PY{p}{)}\PY{p}{,} 
+    \PY{n}{num\PYZus{}initial\PYZus{}neutrons} \PY{o}{=} \PY{l+m+mi}{1}\PY{p}{,} 
+    \PY{n}{plot} \PY{o}{=} \PY{k+kc}{False}
+\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{74}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{valid\PYZus{}3\PYZus{}neutrons} \PY{o}{=} \PY{n}{get\PYZus{}neutrons\PYZus{}in\PYZus{}each\PYZus{}generation}\PY{p}{(}\PY{n}{validation\PYZus{}3}\PY{o}{.}\PY{n}{result\PYZus{}trees}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Neutron Count by Generation: }\PY{l+s+si}{\PYZob{}}\PY{n}{valid\PYZus{}3\PYZus{}neutrons}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Neutron Count by Generation: [0]
+    \end{Verbatim}
+
+    As expected, even despite having the exact same volume as our ``infinite
+volume'' validation case, all of the neutrons are still lost due to
+having an infinitesimal width/infinite skew.
+
+    \hypertarget{a-2-flat-printing-trees}{%
+\subsubsection{A-2 Flat-Printing Trees}\label{a-2-flat-printing-trees}}
+
+    Flat-printing trees was utilized quite often throughout this project,
+and it has proven to be quite useful for understanding the behavior of a
+tree for a given simulation without the chaos of working with
+three-dimensional graphics. It's easy to quickly verify basic mechanics,
+like that the ending position of a parent is the starting position of
+all of its children, and I could quickly see which neutron trees were
+lost and when/why.
+
+    \hypertarget{a-3-unit-tests}{%
+\subsubsection{A-3 Unit Tests}\label{a-3-unit-tests}}
+
+    As usual, I've utilized unit testing quite thoroughly throughout this
+project, especially to verify the behavior of core functions. For more
+in-depth unit tests that required a lot of trivial testing (like testing
+array shapes and datatypes), I could get away with simply generating
+them with generative AI, but for very specific/core tests, I've made
+sure to manually write them.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{64}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{def} \PY{n+nf}{test\PYZus{}get\PYZus{}next\PYZus{}neutron\PYZus{}position}\PY{p}{(}\PY{n}{num\PYZus{}samples}\PY{o}{=}\PY{l+m+mi}{100\PYZus{}000}\PY{p}{,} \PY{n}{tol}\PY{o}{=}\PY{l+m+mf}{0.05}\PY{p}{)}\PY{p}{:}
+\PY{+w}{    }\PY{l+s+sd}{\PYZdq{}\PYZdq{}\PYZdq{}}
+\PY{l+s+sd}{    Tests `get\PYZus{}next\PYZus{}neutron\PYZus{}position`}
+\PY{l+s+sd}{    \PYZdq{}\PYZdq{}\PYZdq{}}
+    \PY{n}{np}\PY{o}{.}\PY{n}{random}\PY{o}{.}\PY{n}{seed}\PY{p}{(}\PY{l+m+mi}{0}\PY{p}{)}
+    \PY{n}{current\PYZus{}position} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{zeros}\PY{p}{(}\PY{l+m+mi}{3}\PY{p}{)}
+    
+    \PY{n}{positions} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{array}\PY{p}{(}\PY{p}{[}\PY{n}{get\PYZus{}next\PYZus{}neutron\PYZus{}position}\PY{p}{(}\PY{n}{current\PYZus{}position}\PY{p}{)} \PY{k}{for} \PY{n}{\PYZus{}} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{num\PYZus{}samples}\PY{p}{)}\PY{p}{]}\PY{p}{)}
+    \PY{n}{displacements} \PY{o}{=} \PY{n}{positions} \PY{o}{\PYZhy{}} \PY{n}{current\PYZus{}position}
+    \PY{n}{distances} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{linalg}\PY{o}{.}\PY{n}{norm}\PY{p}{(}\PY{n}{displacements}\PY{p}{,} \PY{n}{axis}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{)}
+    
+    \PY{c+c1}{\PYZsh{} \PYZhy{}\PYZhy{}\PYZhy{} 1. Output shape check \PYZhy{}\PYZhy{}\PYZhy{}}
+    \PY{k}{assert} \PY{n}{positions}\PY{o}{.}\PY{n}{shape} \PY{o}{==} \PY{p}{(}\PY{n}{num\PYZus{}samples}\PY{p}{,} \PY{l+m+mi}{3}\PY{p}{)}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Output should be 3D positions}\PY{l+s+s2}{\PYZdq{}}
+    
+    \PY{c+c1}{\PYZsh{} \PYZhy{}\PYZhy{}\PYZhy{} 2. Mean displacement = mean free path \PYZhy{}\PYZhy{}\PYZhy{}}
+    \PY{n}{mean\PYZus{}distance} \PY{o}{=} \PY{n}{distances}\PY{o}{.}\PY{n}{mean}\PY{p}{(}\PY{p}{)}
+    \PY{k}{assert} \PY{n+nb}{abs}\PY{p}{(}\PY{n}{mean\PYZus{}distance} \PY{o}{\PYZhy{}} \PY{n}{MEAN\PYZus{}FREE\PYZus{}PATH}\PY{p}{)} \PY{o}{/} \PY{n}{MEAN\PYZus{}FREE\PYZus{}PATH} \PY{o}{\PYZlt{}} \PY{n}{tol}\PY{p}{,} \PYZbs{}
+        \PY{l+s+sa}{f}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Mean distance }\PY{l+s+si}{\PYZob{}}\PY{n}{mean\PYZus{}distance}\PY{l+s+si}{:}\PY{l+s+s2}{.2f}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{ differs too much from expected }\PY{l+s+si}{\PYZob{}}\PY{n}{MEAN\PYZus{}FREE\PYZus{}PATH}\PY{l+s+si}{:}\PY{l+s+s2}{.2f}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{\PYZdq{}}
+    
+    \PY{c+c1}{\PYZsh{} \PYZhy{}\PYZhy{}\PYZhy{} 3. Direction uniformity check (mean of cos(theta) and sin(theta) near 0) \PYZhy{}\PYZhy{}\PYZhy{}}
+    \PY{n}{directions} \PY{o}{=} \PY{n}{displacements} \PY{o}{/} \PY{n}{distances}\PY{p}{[}\PY{p}{:}\PY{p}{,} \PY{k+kc}{None}\PY{p}{]}
+    \PY{n}{mean\PYZus{}dir} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{mean}\PY{p}{(}\PY{n}{directions}\PY{p}{,} \PY{n}{axis}\PY{o}{=}\PY{l+m+mi}{0}\PY{p}{)}
+    \PY{k}{assert} \PY{n}{np}\PY{o}{.}\PY{n}{allclose}\PY{p}{(}\PY{n}{mean\PYZus{}dir}\PY{p}{,} \PY{p}{[}\PY{l+m+mi}{0}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{]}\PY{p}{,} \PY{n}{atol}\PY{o}{=}\PY{l+m+mf}{0.02}\PY{p}{)}\PY{p}{,} \PYZbs{}
+        \PY{l+s+sa}{f}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Directions are not uniform (mean direction = }\PY{l+s+si}{\PYZob{}}\PY{n}{mean\PYZus{}dir}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{)}\PY{l+s+s2}{\PYZdq{}}
+    
+    \PY{c+c1}{\PYZsh{} \PYZhy{}\PYZhy{}\PYZhy{} 4. Magnitude distribution sanity check (exponential shape) \PYZhy{}\PYZhy{}\PYZhy{}}
+    \PY{c+c1}{\PYZsh{} Compare empirical mean to theoretical mean of exponential}
+    \PY{n}{empirical\PYZus{}std} \PY{o}{=} \PY{n}{distances}\PY{o}{.}\PY{n}{std}\PY{p}{(}\PY{p}{)}
+    \PY{n}{theoretical\PYZus{}std} \PY{o}{=} \PY{n}{MEAN\PYZus{}FREE\PYZus{}PATH}
+    \PY{k}{assert} \PY{n+nb}{abs}\PY{p}{(}\PY{n}{empirical\PYZus{}std} \PY{o}{\PYZhy{}} \PY{n}{theoretical\PYZus{}std}\PY{p}{)} \PY{o}{/} \PY{n}{theoretical\PYZus{}std} \PY{o}{\PYZlt{}} \PY{l+m+mf}{0.1}\PY{p}{,} \PYZbs{}
+        \PY{l+s+sa}{f}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Standard deviation }\PY{l+s+si}{\PYZob{}}\PY{n}{empirical\PYZus{}std}\PY{l+s+si}{:}\PY{l+s+s2}{.2f}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{ should be near }\PY{l+s+si}{\PYZob{}}\PY{n}{theoretical\PYZus{}std}\PY{l+s+si}{:}\PY{l+s+s2}{.2f}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s2}{\PYZdq{}}
+    
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Test Passed!}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+    
+\PY{n}{test\PYZus{}get\PYZus{}next\PYZus{}neutron\PYZus{}position}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Test Passed!
+    \end{Verbatim}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{65}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{def} \PY{n+nf}{test\PYZus{}traverse\PYZus{}tree}\PY{p}{(}\PY{n}{debug\PYZus{}print}\PY{p}{:} \PY{n+nb}{bool} \PY{o}{=} \PY{k+kc}{False}\PY{p}{)}\PY{p}{:}
+    \PY{k}{if} \PY{n}{debug\PYZus{}print}\PY{p}{:}
+        \PY{k}{for} \PY{n}{neutron}\PY{p}{,} \PY{n}{generation} \PY{o+ow}{in} \PY{n}{traverse\PYZus{}tree}\PY{p}{(}\PY{n}{EXAMPLE\PYZus{}TREE}\PY{p}{)}\PY{p}{:}
+            \PY{n+nb}{print}\PY{p}{(}\PY{n}{generation}\PY{p}{,} \PY{n}{neutron}\PY{o}{.}\PY{n}{start\PYZus{}pos}\PY{p}{,} \PY{n}{neutron}\PY{o}{.}\PY{n}{end\PYZus{}pos}\PY{p}{)}
+    
+    \PY{k}{assert} \PY{n+nb}{len}\PY{p}{(}\PY{n+nb}{list}\PY{p}{(}\PY{n}{traverse\PYZus{}tree}\PY{p}{(}\PY{n}{EXAMPLE\PYZus{}TREE}\PY{p}{)}\PY{p}{)}\PY{p}{)} \PY{o}{==} \PY{l+m+mi}{5}
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Test Passed!}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+    
+\PY{n}{test\PYZus{}traverse\PYZus{}tree}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Test Passed!
+    \end{Verbatim}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{66}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{def} \PY{n+nf}{test\PYZus{}random\PYZus{}position\PYZus{}in\PYZus{}box}\PY{p}{(}\PY{p}{)}\PY{p}{:}
+    \PY{n}{dim} \PY{o}{=} \PY{p}{(}\PY{l+m+mi}{10}\PY{p}{,}\PY{l+m+mi}{5}\PY{p}{,}\PY{l+m+mi}{3}\PY{p}{)}
+    \PY{k}{assert} \PY{n}{random\PYZus{}position\PYZus{}in\PYZus{}box}\PY{p}{(}\PY{n}{dim}\PY{p}{)}\PY{o}{.}\PY{n}{size} \PY{o}{==} \PY{l+m+mi}{3}
+
+    \PY{n}{pos} \PY{o}{=} \PY{n}{random\PYZus{}position\PYZus{}in\PYZus{}box}\PY{p}{(}\PY{n}{dim}\PY{p}{)}
+    \PY{k}{assert} \PY{n}{bounded\PYZus{}in\PYZus{}dimensions}\PY{p}{(}\PY{n}{pos}\PY{p}{,} \PY{n}{dim}\PY{p}{)}
+    
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Test Passed!}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+    
+\PY{n}{test\PYZus{}random\PYZus{}position\PYZus{}in\PYZus{}box}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Test Passed!
+    \end{Verbatim}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{67}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{def} \PY{n+nf}{test\PYZus{}is\PYZus{}outside\PYZus{}box}\PY{p}{(}\PY{p}{)}\PY{p}{:}
+    \PY{n}{dim} \PY{o}{=} \PY{p}{(}\PY{l+m+mi}{10}\PY{p}{,}\PY{l+m+mi}{5}\PY{p}{)}
+    
+    \PY{k}{assert} \PY{n}{is\PYZus{}outside\PYZus{}box}\PY{p}{(}\PY{n}{random\PYZus{}position\PYZus{}in\PYZus{}box}\PY{p}{(}\PY{n}{dim}\PY{p}{)}\PY{p}{,} \PY{n}{dim}\PY{p}{)} \PY{o}{==} \PY{k+kc}{False}
+    \PY{k}{assert} \PY{n}{is\PYZus{}outside\PYZus{}box}\PY{p}{(}\PY{n}{np}\PY{o}{.}\PY{n}{array}\PY{p}{(}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{,}   \PY{l+m+mi}{0}\PY{p}{]}\PY{p}{)}\PY{p}{,} \PY{n}{dim}\PY{p}{)} \PY{o}{==} \PY{k+kc}{False}
+    \PY{k}{assert} \PY{n}{is\PYZus{}outside\PYZus{}box}\PY{p}{(}\PY{n}{np}\PY{o}{.}\PY{n}{array}\PY{p}{(}\PY{p}{[}\PY{l+m+mi}{10}\PY{p}{,}  \PY{l+m+mi}{5}\PY{p}{]}\PY{p}{)}\PY{p}{,} \PY{n}{dim}\PY{p}{)} \PY{o}{==} \PY{k+kc}{False}
+    \PY{k}{assert} \PY{n}{is\PYZus{}outside\PYZus{}box}\PY{p}{(}\PY{n}{np}\PY{o}{.}\PY{n}{array}\PY{p}{(}\PY{p}{[}\PY{l+m+mi}{11}\PY{p}{,}  \PY{l+m+mi}{5}\PY{p}{]}\PY{p}{)}\PY{p}{,} \PY{n}{dim}\PY{p}{)} \PY{o}{==} \PY{k+kc}{True}
+    \PY{k}{assert} \PY{n}{is\PYZus{}outside\PYZus{}box}\PY{p}{(}\PY{n}{np}\PY{o}{.}\PY{n}{array}\PY{p}{(}\PY{p}{[}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{,} \PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{)}\PY{p}{,} \PY{n}{dim}\PY{p}{)} \PY{o}{==} \PY{k+kc}{True}
+    
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Test Passed!}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+    
+\PY{n}{test\PYZus{}is\PYZus{}outside\PYZus{}box}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Test Passed!
+    \end{Verbatim}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{68}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k+kn}{import} \PY{n+nn}{math}
+
+\PY{k}{def} \PY{n+nf}{test\PYZus{}generate\PYZus{}tree\PYZus{}structure}\PY{p}{(}\PY{p}{)}\PY{p}{:}
+\PY{+w}{    }\PY{l+s+sd}{\PYZdq{}\PYZdq{}\PYZdq{}Root should be a NeutronNode with valid positions.\PYZdq{}\PYZdq{}\PYZdq{}}
+    \PY{n}{root} \PY{o}{=} \PY{n}{generate\PYZus{}tree}\PY{p}{(}\PY{l+m+mi}{3}\PY{p}{,} \PY{p}{(}\PY{l+m+mi}{10}\PY{p}{,} \PY{l+m+mi}{10}\PY{p}{,} \PY{l+m+mi}{10}\PY{p}{)}\PY{p}{)}
+
+    \PY{k}{assert} \PY{n+nb}{isinstance}\PY{p}{(}\PY{n}{root}\PY{p}{,} \PY{n}{NeutronNode}\PY{p}{)}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Root must be NeutronNode}\PY{l+s+s2}{\PYZdq{}}
+    \PY{k}{assert} \PY{n+nb}{hasattr}\PY{p}{(}\PY{n}{root}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{children}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Root must have children list}\PY{l+s+s2}{\PYZdq{}}
+
+    \PY{k}{assert} \PY{n+nb}{len}\PY{p}{(}\PY{n}{root}\PY{o}{.}\PY{n}{start\PYZus{}pos}\PY{p}{)} \PY{o}{==} \PY{l+m+mi}{3}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Start position must be 3D}\PY{l+s+s2}{\PYZdq{}}
+    \PY{k}{assert} \PY{n+nb}{len}\PY{p}{(}\PY{n}{root}\PY{o}{.}\PY{n}{end\PYZus{}pos}\PY{p}{)} \PY{o}{==} \PY{l+m+mi}{3}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{End position must be 3D}\PY{l+s+s2}{\PYZdq{}}
+
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{test\PYZus{}generate\PYZus{}tree\PYZus{}structure passed.}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+
+
+\PY{k}{def} \PY{n+nf}{test\PYZus{}positions\PYZus{}validity}\PY{p}{(}\PY{p}{)}\PY{p}{:}
+\PY{+w}{    }\PY{l+s+sd}{\PYZdq{}\PYZdq{}\PYZdq{}}
+\PY{l+s+sd}{    Start must be inside the box; end may be inside or outside.}
+\PY{l+s+sd}{    \PYZdq{}\PYZdq{}\PYZdq{}}
+    \PY{n}{dims} \PY{o}{=} \PY{p}{(}\PY{l+m+mi}{10}\PY{p}{,} \PY{l+m+mi}{10}\PY{p}{,} \PY{l+m+mi}{10}\PY{p}{)}
+    \PY{n}{root} \PY{o}{=} \PY{n}{generate\PYZus{}tree}\PY{p}{(}\PY{l+m+mi}{4}\PY{p}{,} \PY{n}{dims}\PY{p}{)}
+
+    \PY{k}{assert} \PY{n}{bounded\PYZus{}in\PYZus{}dimensions}\PY{p}{(}\PY{n}{root}\PY{o}{.}\PY{n}{start\PYZus{}pos}\PY{p}{,} \PY{n}{dims}\PY{p}{)}\PY{p}{,} \PYZbs{}
+        \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Initial position must be inside the box}\PY{l+s+s2}{\PYZdq{}}
+
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{test\PYZus{}positions\PYZus{}validity passed.}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+
+
+\PY{k}{def} \PY{n+nf}{test\PYZus{}tree\PYZus{}depth}\PY{p}{(}\PY{p}{)}\PY{p}{:}
+\PY{+w}{    }\PY{l+s+sd}{\PYZdq{}\PYZdq{}\PYZdq{}}
+\PY{l+s+sd}{    Tree depth should not exceed num\PYZus{}generations.}
+\PY{l+s+sd}{    \PYZdq{}\PYZdq{}\PYZdq{}}
+    \PY{n}{dims} \PY{o}{=} \PY{p}{(}\PY{l+m+mi}{10}\PY{p}{,} \PY{l+m+mi}{10}\PY{p}{,} \PY{l+m+mi}{10}\PY{p}{)}
+    \PY{n}{gens} \PY{o}{=} \PY{l+m+mi}{4}
+    \PY{n}{root} \PY{o}{=} \PY{n}{generate\PYZus{}tree}\PY{p}{(}\PY{n}{gens}\PY{p}{,} \PY{n}{dims}\PY{p}{)}
+
+    \PY{c+c1}{\PYZsh{} BFS to compute max depth}
+    \PY{n}{queue} \PY{o}{=} \PY{p}{[}\PY{p}{(}\PY{n}{root}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{)}\PY{p}{]}
+    \PY{n}{max\PYZus{}depth} \PY{o}{=} \PY{l+m+mi}{0}
+
+    \PY{k}{while} \PY{n}{queue}\PY{p}{:}
+        \PY{n}{node}\PY{p}{,} \PY{n}{depth} \PY{o}{=} \PY{n}{queue}\PY{o}{.}\PY{n}{pop}\PY{p}{(}\PY{l+m+mi}{0}\PY{p}{)}
+        \PY{n}{max\PYZus{}depth} \PY{o}{=} \PY{n+nb}{max}\PY{p}{(}\PY{n}{max\PYZus{}depth}\PY{p}{,} \PY{n}{depth}\PY{p}{)}
+
+        \PY{k}{for} \PY{n}{child} \PY{o+ow}{in} \PY{n}{node}\PY{o}{.}\PY{n}{children}\PY{p}{:}
+            \PY{n}{queue}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{p}{(}\PY{n}{child}\PY{p}{,} \PY{n}{depth} \PY{o}{+} \PY{l+m+mi}{1}\PY{p}{)}\PY{p}{)}
+
+    \PY{k}{assert} \PY{n}{max\PYZus{}depth} \PY{o}{\PYZlt{}}\PY{o}{=} \PY{n}{gens}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Tree depth exceeds num\PYZus{}generations}\PY{l+s+s2}{\PYZdq{}}
+
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{test\PYZus{}tree\PYZus{}depth passed.}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+
+
+\PY{k}{def} \PY{n+nf}{test\PYZus{}lost\PYZus{}flag\PYZus{}correctness}\PY{p}{(}\PY{p}{)}\PY{p}{:}
+\PY{+w}{    }\PY{l+s+sd}{\PYZdq{}\PYZdq{}\PYZdq{}}
+\PY{l+s+sd}{    lost == True if and only if end\PYZus{}pos is outside box.}
+\PY{l+s+sd}{    \PYZdq{}\PYZdq{}\PYZdq{}}
+    \PY{n}{dims} \PY{o}{=} \PY{p}{(}\PY{l+m+mi}{10}\PY{p}{,} \PY{l+m+mi}{10}\PY{p}{,} \PY{l+m+mi}{10}\PY{p}{)}
+    \PY{n}{root} \PY{o}{=} \PY{n}{generate\PYZus{}tree}\PY{p}{(}\PY{l+m+mi}{1}\PY{p}{,} \PY{n}{dims}\PY{p}{)}
+
+    \PY{n}{expected} \PY{o}{=} \PY{n}{is\PYZus{}outside\PYZus{}box}\PY{p}{(}\PY{n}{root}\PY{o}{.}\PY{n}{end\PYZus{}pos}\PY{p}{,} \PY{n}{dims}\PY{p}{)}
+    \PY{k}{assert} \PY{n}{root}\PY{o}{.}\PY{n}{lost} \PY{o}{==} \PY{n}{expected}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Lost flag does not match outside\PYZhy{}box test}\PY{l+s+s2}{\PYZdq{}}
+
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{test\PYZus{}lost\PYZus{}flag\PYZus{}correctness passed.}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+
+
+\PY{k}{def} \PY{n+nf}{test\PYZus{}multiple\PYZus{}generations\PYZus{}not\PYZus{}empty}\PY{p}{(}\PY{p}{)}\PY{p}{:}
+\PY{+w}{    }\PY{l+s+sd}{\PYZdq{}\PYZdq{}\PYZdq{}}
+\PY{l+s+sd}{    If num\PYZus{}generations \PYZgt{} 0, root }
+\PY{l+s+sd}{    should potentially have children.}
+\PY{l+s+sd}{    \PYZdq{}\PYZdq{}\PYZdq{}}
+    \PY{n}{dims} \PY{o}{=} \PY{p}{(}\PY{l+m+mi}{10}\PY{p}{,} \PY{l+m+mi}{10}\PY{p}{,} \PY{l+m+mi}{10}\PY{p}{)}
+    \PY{n}{root} \PY{o}{=} \PY{n}{generate\PYZus{}tree}\PY{p}{(}\PY{l+m+mi}{3}\PY{p}{,} \PY{n}{dims}\PY{p}{)}
+
+    \PY{c+c1}{\PYZsh{} Children may be zero if neutron is immediately lost,}
+    \PY{c+c1}{\PYZsh{} but if not lost, we expect children}
+    \PY{k}{if} \PY{o+ow}{not} \PY{n}{root}\PY{o}{.}\PY{n}{lost}\PY{p}{:}
+        \PY{k}{assert} \PY{n+nb}{len}\PY{p}{(}\PY{n}{root}\PY{o}{.}\PY{n}{children}\PY{p}{)} \PY{o}{\PYZgt{}} \PY{l+m+mi}{0}\PY{p}{,} \PYZbs{}
+            \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Root is not lost, but has no children!}\PY{l+s+s2}{\PYZdq{}}
+
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{test\PYZus{}multiple\PYZus{}generations\PYZus{}not\PYZus{}empty passed.}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+
+
+\PY{k}{def} \PY{n+nf}{test\PYZus{}generate\PYZus{}tree}\PY{p}{(}\PY{p}{)}\PY{p}{:}
+    \PY{n}{test\PYZus{}generate\PYZus{}tree\PYZus{}structure}\PY{p}{(}\PY{p}{)}
+    \PY{n}{test\PYZus{}positions\PYZus{}validity}\PY{p}{(}\PY{p}{)}
+    \PY{n}{test\PYZus{}tree\PYZus{}depth}\PY{p}{(}\PY{p}{)}
+    \PY{n}{test\PYZus{}lost\PYZus{}flag\PYZus{}correctness}\PY{p}{(}\PY{p}{)}
+    \PY{n}{test\PYZus{}multiple\PYZus{}generations\PYZus{}not\PYZus{}empty}\PY{p}{(}\PY{p}{)}
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s2}{ALL TESTS PASSED!}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+
+
+\PY{c+c1}{\PYZsh{} Run them}
+\PY{n}{test\PYZus{}generate\PYZus{}tree}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+test\_generate\_tree\_structure passed.
+test\_positions\_validity passed.
+test\_tree\_depth passed.
+test\_lost\_flag\_correctness passed.
+test\_multiple\_generations\_not\_empty passed.
+
+ALL TESTS PASSED!
+    \end{Verbatim}
+
+    \hypertarget{b.-reflection-questions}{%
+\subsection{B. Reflection Questions}\label{b.-reflection-questions}}
+
+    \hypertarget{b-1.-coding-approaches-a}{%
+\subsubsection{B-1. Coding Approaches
+(A)}\label{b-1.-coding-approaches-a}}
+
+    \begin{quote}
+How well did you apply and extend your coding knowledge in this project?
+Consider steps you took to make the code more efficient, readable and/or
+concise.
+\end{quote}
+
+    I had to go back and reference some programming theory from CPSC 110, a
+course I took last year, to treat the neutron-branching as a tree
+generation problem using generative recursion. This problem can be done
+in other ways, but a implementations of tree traversal and generation
+algorithms undoubtedly serves as the cleanest and simplest solution to
+this problem.
+
+    \begin{quote}
+Discuss any new-to-you coding techniques, functions or python packages
+that you learned how to use.
+\end{quote}
+
+I had to use three-dimensional plotting, which was definitely rough to
+implement (to say the least). I felt that, in this instance, no other
+kind of plot would have been effective to display the trajectories, as,
+for example, cross-sections leave out key dimensional information.
+
+\begin{quote}
+Reflect on any unforeseen coding challenges you faced in completing this
+project.
+\end{quote}
+
+Unlike past projects, functions in this project build upon each other a
+lot. If one function fails, then all future functions quickly fail. It
+became even more critical on this project than ever before that certain
+subroutines are guaranteed to work, and I struggled a bit on this
+project with maintaining that fault tolerance.
+
+    \hypertarget{b-2.-coding-approaches-b}{%
+\subsubsection{B-2. Coding Approaches
+(B)}\label{b-2.-coding-approaches-b}}
+
+\begin{quote}
+Highlight an aspect of your code that you feel you did particularily
+well.
+\end{quote}
+
+    I'm particularly proud of my work on the function
+\texttt{traverse\_tree} to simplify tree traversal, as this function
+allows for the generalization of the tree data structure with a much
+simpler interface.
+
+    \begin{quote}
+Discuss an aspect of your code that would benefit the most from further
+effort.
+\end{quote}
+
+I feel somewhat unhappy with the code for generating the histograms for
+each generation, as this may be better as one multi-panel plot rather
+than separate plots, but I couldn't figure out how to dynamically
+generate this like I was able to on the contour plotting.
+
+    \hypertarget{b-3.-simulation-physics-and-investigation-a}{%
+\subsubsection{B-3. Simulation Physics and Investigation
+(A)}\label{b-3.-simulation-physics-and-investigation-a}}
+
+\begin{quote}
+How well did you apply and extend your physical modelling and scientific
+investigation skills in this project? Consider the phase space you chose
+to explore and how throroughly you explored it. Consider how you
+translated physics into code and if appropriate any new physics you
+learned or developed a more thorough understanding of.
+\end{quote}
+
+    The nature of the phase space I've explored is in an attempt to study
+the relationship between the multiplication rate of the simulation as a
+function of the geometry of the bounding box, and I feel as though given
+the restrictions/research situation as I have framed it, I've been
+successful at considering the trends produced. I feel as though my
+investigation was sufficiently thorough, but my concern is that the
+research situation as I've framed it is a little trivial. Again, I made
+no consideration of length dependence (so this project is
+three-dimensional computationally but only two-dimensionally in
+parameters), and the results that I've produced are almost entirely
+trivial/intuitive. As such, I didn't use particularly complicated (or
+any new) physics on this project, but I feel quite happy with the
+physics I did use.
+
+    \hypertarget{b-4.-simulation-physics-and-investigation-b}{%
+\subsubsection{B-4. Simulation Physics and Investigation
+(B)}\label{b-4.-simulation-physics-and-investigation-b}}
+
+\begin{quote}
+Highlight something you feel you did particularily well in terms of the
+context of your simulation, the physical modelling that you did or the
+investigation you performed. Discuss an aspect of these dimensions of
+your project that would benefit the most from further effort.
+\end{quote}
+
+    I believe my best section of physical modelling was in my calculation
+and plotting of three-dimensional electron trajectories (or, in other
+words, my full process for generating and displaying Neutron trees).
+This was undoubtedly my favorite part of my project, not only in terms
+of code-writing and mathematics but also in validating its success from
+seeing the visualization.
+
+    \hypertarget{b-5.-effectiveness-of-your-communication}{%
+\subsubsection{B-5. Effectiveness of Your
+Communication}\label{b-5.-effectiveness-of-your-communication}}
+
+\begin{quote}
+Highlight something you feel you did particularily well in your
+visualizations or written communication. Discuss an aspect of your
+visualizations or written communication that would benefit the most from
+further effort.
+\end{quote}
+
+    I feel as though, again, that my 3-D plotting of the Neutron
+trajectories was quite good, but my visualization of the aspect ratio
+space is quite poor, because it really only shows the width dependence
+rather than the height dependence as well, as the range where \(R > 1\)
+is obviously greater than the range where \(0 \le R < 1\), and I
+couldn't figure out how to rectify this.
+
+    \hypertarget{acknowledgements}{%
+\section{Acknowledgements}\label{acknowledgements}}
+
+    I used ChatGPT quite a lot in writing this project, particularly for
+code generation (trivial tests, simple implementations, etc.). For
+example, due to my lack of knowledge in 3-D plotting, I provided ChatGPT
+with the following stub:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{def}\NormalTok{ draw\_3d\_box(ax, origin, dimensions, edgecolor}\OperatorTok{=}\StringTok{\textquotesingle{}red\textquotesingle{}}\NormalTok{, linestyle}\OperatorTok{=}\StringTok{\textquotesingle{}dashed\textquotesingle{}}\NormalTok{, linewidth}\OperatorTok{=}\DecValTok{1}\NormalTok{):}
+    \CommentTok{"""}
+\CommentTok{    Draws a 3D wireframe box on a given 3D axes.}
+\CommentTok{    """}
+    \ControlFlowTok{return}
+\end{Highlighting}
+\end{Shaded}
+
+and then tried (and tweaked) its responses until I got a solution that
+seemed to work.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+
+\end{Verbatim}
+\end{tcolorbox}
+
+
+    % Add a bibliography block to the postdoc
+    
+    
+    
+\end{document}
